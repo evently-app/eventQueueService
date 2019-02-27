@@ -32,6 +32,10 @@ var controllers = {
           console.log("MY URL: " + sourceConst.getRequestUrl(req));
           res.send({"message": "check console!"})
        },
+   test_grab_error: function(req, res) {
+          var sourceConst = new sourceConstructor("eventbrite.com/", "token", "testToken", ["city"], "Eventbrite");
+          sourceConst.grab(req, res);
+       },
 };
 
 module.exports = controllers;

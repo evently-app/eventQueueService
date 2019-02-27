@@ -1,3 +1,5 @@
+var request = require('request');
+
 class sourceConstructor {
 	constructor(url, apiTerm, token, paramList, apiName){
 		this.url = url;
@@ -8,16 +10,16 @@ class sourceConstructor {
 	}
 
 	grab(req, res){
-		var requestURL = self.getRequestUrl(req)
+		var requestURL = this.getRequestUrl(req)
 
 		request(requestURL,
 	       	function (error, response, body) {
 	           if (!error && response.statusCode == 200) {
 	               response = JSON.parse(body);
-	               res.send(response);
+	               return response
 	           } else {
 	               console.log(response.statusCode + response.body);
-	               res.send({distance: -1});
+	               return -1
 	           }
 	    });
 	}
