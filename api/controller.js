@@ -3,6 +3,7 @@
 var properties = require('../package.json')
 var distance = require('../service/distance');
 var eventbrite = require('../service/eventbrite');
+var sourceConstructor = require('../service/sourceConstructor');
 
 var controllers = {
    about: function(req, res) {
@@ -25,6 +26,11 @@ var controllers = {
                    res.send(err);
                res.json(dist);
            });
+       },
+   test_get_request_url: function(req, res) {
+          var sourceConst = new sourceConstructor("eventbrite.com/", "token", "testToken", ["city"], "Eventbrite");
+          console.log("MY URL: " + sourceConst.getRequestUrl(req));
+          res.send({"message": "check console!"})
        },
 };
 

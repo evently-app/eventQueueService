@@ -9,4 +9,6 @@ module.exports = function(app) {
        .get(controller.get_distance);
    app.route('/grab_eventbrite/:city/:radius')
        .get(controller.grab_eventbrite);
+   app.route('/test_get_request_url/:city')
+       .get(controller.test_get_request_url);
 };
