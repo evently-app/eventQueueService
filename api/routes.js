@@ -11,6 +11,6 @@ module.exports = function(app) {
        .get(controller.grab_eventbrite);
    app.route('/test_get_request_url/:city')
        .get(controller.test_get_request_url);
-   app.route('/test_grab_error/:city')
-       .get(controller.test_grab_error);
+   app.route('/test_grab_eventbrite_w_sourceConstructor/:city')
+       .get(controller.test_grab_eventbrite_w_sourceConstructor);
 };

@@ -1,39 +1,53 @@
+'use strict';
+
 var request = require('request');
 
 class sourceConstructor {
-	constructor(url, apiTerm, token, paramList, apiName){
+	constructor(url, apiTerm, token, paramMap, apiName){
 		this.url = url;
-		this.apiTerm = apiTerm
+		this.apiTerm = apiTerm; // sources vary in how they refer to the token (e.g "token" or "apikey")
 		this.token = token;
-		this.paramList = paramList;
+		this.paramMap = paramMap;
 		this.apiName = apiName;
+		this.lastData = null;
 	}
 
 	grab(req, res){
-		var requestURL = this.getRequestUrl(req)
+		var requestURL = this.getRequestUrl(req);
 
 		request(requestURL,
 	       	function (error, response, body) {
 	           if (!error && response.statusCode == 200) {
 	               response = JSON.parse(body);
-	               return response
+	               this.lastData = response;
 	           } else {
 	               console.log(response.statusCode + response.body);
-	               return -1
+	               res.send({"error!":response.statusCode + response.body});
 	           }
 	    });
 	}
 
-	getRequestUrl(req){
-		var requestURL = this.url
-		for (var i = 0; i < this.paramList.length; i++){
-			if(req.params[this.paramList[i]] != null){
-				requestURL += this.paramList[i] + "=" + req.params[this.paramList[i]] + '&'
+	mapToSourceParams(reqParams){
+		var sourceParams = {};
+		for (const [key, value] of Object.entries(this.paramMap)) {
+			if(reqParams[key] != null){
+				sourceParams[value] = reqParams[key];
 			}
 		}
-		requestURL += this.apiTerm + "=" + this.token
+		return sourceParams;
+	}
 
-		return requestURL
+	getRequestUrl(req){
+		var requestURL = this.url;
+		var sourceParams = this.mapToSourceParams(req.params);
+
+		for (const [key, value] of Object.entries(sourceParams)) {
+			requestURL += key + "=" + value + '&';
+		}
+
+		requestURL += this.apiTerm + "=" + this.token;
+
+		return requestURL;
 	}
 
 }
