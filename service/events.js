@@ -1,34 +1,37 @@
 var request = require('request');
+var sourceConstructor = require('./sourceConstructor');
 
 const apiKey = process.env.EVENTBRITE_API_KEY;
-const apiURL = 'https://www.eventbriteapi.com/v3/events/search/?location.address=';
+//const apiURL = 'https://www.eventbriteapi.com/v3/events/search/?location.address=';
 
-function formatEventObject(res){
+function formatEventObject(res, type){
   console.log("yo")
   console.log("INFO PASSED TO THE FUNCTION IS: ", res)
 
   var formattedEvents = {}
   var size = -1 
 
-  for(var i = 0; i<15; i++){
-    var event = {
-    event_name: res["events"][i]["name"]["text"],
-    start_time: res["events"][i]["start"]["local"],
-    end_time: res["events"][i]["end"]["local"],
-    ticket_url: res["events"][i]["url"],
-    id: res["events"][i]["id"],
-    tags: ["hippo", "campus"],
-    image_url: res["events"][i]["logo"]["url"]
-  }
-    formattedEvents[size+1]= event  
-    size = Object.keys(formattedEvents).length
-  }
+  if(type == "Eventbrite"){
+    for(var i = 0; i<15; i++){
+      var event = {
+      event_name: res["events"][i]["name"]["text"],
+      start_time: res["events"][i]["start"]["local"],
+      end_time: res["events"][i]["end"]["local"],
+      ticket_url: res["events"][i]["url"],
+      id: res["events"][i]["id"],
+      tags: ["hippo", "campus"],
+      image_url: res["events"][i]["logo"]["url"]
+      }
+      formattedEvents[size+1]= event  
+      size = Object.keys(formattedEvents).length
+    }
 
- // console.log("The result is: ", formattedEvents)
-  return formattedEvents
+    return formattedEvents
+  }
+  
 }
 
-var eventbrite = {
+var grabAllEvents = {
    grab: function(req, res, next) {
        request(apiURL + req.params.city + '&location.within=' + req.params.radius + 'km&' + 'token=' + apiKey,
        function (error, response, body) {

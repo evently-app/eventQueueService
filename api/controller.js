@@ -27,6 +27,15 @@ var controllers = {
                res.json(dist);
            });
        },
+
+    grab_events: function(req, res) {
+           events.grab(req, res, function(err, dist) {
+               if (err)
+                   res.send(err);
+               res.json(dist);
+           });
+
+    },
    test_get_request_url: function(req, res) {
           var sourceConst = new sourceConstructor("https://www.eventbriteapi.com/v3/events/search/?", "token", process.env.EVENTBRITE_API_KEY || "testToken", {"city": "location.address"}, "Eventbrite");
           console.log("MY URL: " + sourceConst.getRequestUrl(req));
