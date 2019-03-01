@@ -3,6 +3,7 @@
 var properties = require('../package.json')
 var distance = require('../service/distance');
 var eventbrite = require('../service/eventbrite');
+var events = require('../service/events');
 var sourceConstructor = require('../service/sourceConstructor');
 
 var controllers = {
@@ -34,7 +35,6 @@ var controllers = {
                    res.send(err);
                res.json(dist);
            });
-
     },
    test_get_request_url: function(req, res) {
           var sourceConst = new sourceConstructor("https://www.eventbriteapi.com/v3/events/search/?", "token", process.env.EVENTBRITE_API_KEY || "testToken", {"city": "location.address"}, "Eventbrite");
