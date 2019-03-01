@@ -9,22 +9,23 @@ class sourceConstructor {
 		this.token = token;
 		this.paramMap = paramMap;
 		this.apiName = apiName;
-		this.lastData = null;
 	}
 
 	grab(req, res){
-		var requestURL = this.getRequestUrl(req);
+		var requestURL = this.getRequestUrl(req); 
 
-		request(requestURL,
-	       	function (error, response, body) {
-	           if (!error && response.statusCode == 200) {
-	               response = JSON.parse(body);
-	               this.lastData = response;
-	           } else {
-	               console.log(response.statusCode + response.body);
-	               res.send({"error!":response.statusCode + response.body});
-	           }
-	    });
+		return new Promise(function(resolve, reject) {
+  				request(requestURL,
+			       	function (error, response, body) {
+			           if (!error && response.statusCode == 200) {
+			               response = JSON.parse(body);
+			               resolve(response);
+			           } else {
+			               console.log(response.statusCode + response.body);
+			               res.send({"error!":response.statusCode + response.body});
+			    		}
+	   			});
+		});
 	}
 
 	mapToSourceParams(reqParams){

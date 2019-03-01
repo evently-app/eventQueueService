@@ -13,4 +13,6 @@ module.exports = function(app) {
        .get(controller.test_get_request_url);
    app.route('/test_grab_eventbrite_w_sourceConstructor/:city')
        .get(controller.test_grab_eventbrite_w_sourceConstructor);
+   app.route('/test_grab_events_api/:city')
+       .get(controller.test_grab_events_api);
 };
