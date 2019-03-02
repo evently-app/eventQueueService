@@ -12,6 +12,7 @@
     "async": "^2.6.2",
     "express": "^4.16.4",
     "firebase-admin": "^7.0.0",
+    "object-merge": "^2.5.1",
     "request": "^2.88.0"
   }
 }

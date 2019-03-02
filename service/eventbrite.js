@@ -3,6 +3,7 @@ var request = require('request');
 const apiKey = process.env.EVENTBRITE_API_KEY;
 const apiURL = 'https://www.eventbriteapi.com/v3/events/search/?location.address=';
 
+
 function formatEventObject(res){
   console.log("yo")
   console.log("INFO PASSED TO THE FUNCTION IS: ", res)
