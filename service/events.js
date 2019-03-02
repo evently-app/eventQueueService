@@ -5,7 +5,6 @@ const apiKey = process.env.EVENTBRITE_API_KEY;
 var eventbrite = require('./eventbrite');
 var objectMerge = require('object-merge');
 const admin = require('firebase-admin');
-//var serviceAccount = require("path/to/serviceAccountKey.json");
 //var serviceAccount = require('path/to/serviceAccountKey.json');
 var size = 0
 var dma_id = "501"
@@ -18,7 +17,7 @@ var dma_id = "501"
 
 // var db = admin.firestore();
 
-var sourceList = ["Eventbrite", "Eventbrite2"]
+var sourceList = ["Eventbrite", "Ticketmaster"]
 
 function formatEventObject(res, type){
 
@@ -33,15 +32,32 @@ function formatEventObject(res, type){
       end_time: res["events"][i]["end"]["local"],
       ticket_url: res["events"][i]["url"],
       id: res["events"][i]["id"],
-      tags: ["hippo", "campus"],
+      tags: ["eventbrite"],
       image_url: res["events"][i]["logo"]["url"]
       }
       formattedEvents[res["events"][i]["id"]]= event  
       //cache event ID 
       //cache(event.id, event)
     }
-    return formattedEvents
   }
+
+  else if(type == "Ticketmaster"){
+    for(var i = 0; i<5; i++){
+      var event = {
+      event_name: res["_embedded"]["events"][i]["name"],
+      start_time: res["_embedded"]["events"][i]["dates"]["dateTime"],
+      end_time: null,
+      ticket_url: res["_embedded"]["events"][i]["url"],
+      id: res["_embedded"]["events"][i]["id"],
+      tags: ["ticketmaster"],
+      image_url: res["_embedded"]["events"][i]["images"]
+      }
+      formattedEvents[res["_embedded"]["events"][i]["id"]]= event  
+      //cache event ID 
+      //cache(event.id, event)
+    }
+  }
+   return formattedEvents
 }
 
 function cache(id, event){
@@ -61,7 +77,7 @@ var events = {
         process.env.EVENTBRITE_API_KEY || "testToken", {"city": "location.address"}, sourceList[0]));
 
       //ticketmaster
-      sourceObjects.push(new sourceConstructor("https://app.ticketmaster.com/discovery/v2/events.json?", "apikey", process.env.TICKETMASTER_API_KEY, {"city": "dma_id"}, sourceList[1]))
+      sourceObjects.push(new sourceConstructor("https://app.ticketmaster.com/discovery/v2/events.json?", "apikey", process.env.TICKETMASTER_API_KEY, {"city": "city"}, sourceList[1]))
 
 
       // send requests with each source
@@ -74,10 +90,7 @@ var events = {
       Promise.all(requests).then(function (returnvals){
         for(var i = 0; i < sourceList.length; i++){
           formattedEvents.push(formatEventObject(returnvals[i], sourceList[i]))
-          console.log(returnvals[i])
         }
-
-        console.log(returnvals[1])
 
         //merge them! 
         var resultObject = formattedEvents.reduce(((r, c) => Object.assign(r, c)), {})
