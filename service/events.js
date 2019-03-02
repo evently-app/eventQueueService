@@ -2,27 +2,30 @@ var async = require('async');
 var request = require('request');
 var sourceConstructor = require('./sourceConstructor');
 const apiKey = process.env.EVENTBRITE_API_KEY;
-const apiURL = 'https://www.eventbriteapi.com/v3/events/search/?location.address=';
 var eventbrite = require('./eventbrite');
 var objectMerge = require('object-merge');
 const admin = require('firebase-admin');
+//var serviceAccount = require("path/to/serviceAccountKey.json");
 //var serviceAccount = require('path/to/serviceAccountKey.json');
+var size = 0
+var dma_id = "501"
 
-admin.initializeApp({
-  credential: admin.credential.applicationDefault()
-});
+//initialize Firebase 
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: "https://evently-db.firebaseio.com"
+// });
 
-var db = admin.firestore();
+// var db = admin.firestore();
+
 var sourceList = ["Eventbrite", "Eventbrite2"]
-var hello = 0
 
 function formatEventObject(res, type){
 
   var formattedEvents = {}
-  var size = -1 
+  
 
   if(type == "Eventbrite"){
-    console.log("HEHEHEHEHE")
     for(var i = 0; i<5; i++){
       var event = {
       event_name: res["events"][i]["name"]["text"],
@@ -33,8 +36,8 @@ function formatEventObject(res, type){
       tags: ["hippo", "campus"],
       image_url: res["events"][i]["logo"]["url"]
       }
-      formattedEvents[size+1]= event  
-      size = Object.keys(formattedEvents).length
+      formattedEvents[res["events"][i]["id"]]= event  
+      //cache event ID 
       //cache(event.id, event)
     }
     return formattedEvents
@@ -50,10 +53,16 @@ var events = {
    grab: function(req, res) {
       var sourceObjects = [];
       var formattedEvents = []; 
-      for (var i = 0; i < sourceList.length; i++){
-        sourceObjects.push(new sourceConstructor("https://www.eventbriteapi.com/v3/events/search/?", "token", 
-          process.env.EVENTBRITE_API_KEY || "testToken", {"city": "location.address"}, sourceList[i]));
-      }
+
+      //create source request constructors 
+
+      //eventbrite 
+      sourceObjects.push(new sourceConstructor("https://www.eventbriteapi.com/v3/events/search/?", "token", 
+        process.env.EVENTBRITE_API_KEY || "testToken", {"city": "location.address"}, sourceList[0]));
+
+      //ticketmaster
+      sourceObjects.push(new sourceConstructor("https://app.ticketmaster.com/discovery/v2/events.json?", "apikey", process.env.TICKETMASTER_API_KEY, {"city": "dma_id"}, sourceList[1]))
+
 
       // send requests with each source
       var requests = []
@@ -61,14 +70,17 @@ var events = {
         requests.push(sourceObjects[i].grab(req, res));
       }
 
+      //wait for all requests to compelte, then format 
       Promise.all(requests).then(function (returnvals){
         for(var i = 0; i < sourceList.length; i++){
-          formattedEvents.push(formatEventObject(returnvals[i], "Eventbrite"))
+          formattedEvents.push(formatEventObject(returnvals[i], sourceList[i]))
+          console.log(returnvals[i])
         }
 
-        var resultObject = objectMerge(formattedEvents[0], formattedEvents[1])//formattedEvents.reduce(function(result, currentObject) {
+        console.log(returnvals[1])
 
-        console.log(resultObject);
+        //merge them! 
+        var resultObject = formattedEvents.reduce(((r, c) => Object.assign(r, c)), {})
         res.send(resultObject)
       })
 

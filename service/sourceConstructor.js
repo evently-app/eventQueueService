@@ -14,6 +14,8 @@ class sourceConstructor {
 	grab(req, res){
 		var requestURL = this.getRequestUrl(req); 
 
+		console.log("request URL: ", requestURL)
+
 		return new Promise(function(resolve, reject) {
   				request(requestURL,
 			       	function (error, response, body) {
