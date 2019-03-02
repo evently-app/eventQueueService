@@ -3,6 +3,8 @@
 var properties = require('../package.json')
 var distance = require('../service/distance');
 var eventbrite = require('../service/eventbrite');
+var sourceConstructor = require('../service/sourceConstructor');
+var eventsAPI = require('../service/events');
 
 var controllers = {
    about: function(req, res) {
@@ -26,6 +28,20 @@ var controllers = {
                res.json(dist);
            });
        },
+   test_get_request_url: function(req, res) {
+          var sourceConst = new sourceConstructor("https://www.eventbriteapi.com/v3/events/search/?", "token", process.env.EVENTBRITE_API_KEY || "testToken", {"city": "location.address"}, "Eventbrite");
+          console.log("MY URL: " + sourceConst.getRequestUrl(req));
+          res.send({"message": "check console!"});
+       },
+   test_grab_eventbrite_w_sourceConstructor: function(req, res) {
+          var sourceConst = new sourceConstructor("https://www.eventbriteapi.com/v3/events/search/?", "token", process.env.EVENTBRITE_API_KEY || "testToken", {"city": "location.address"}, "Eventbrite");
+          sourceConst.grab(req, res);
+          res.send({"message": "Eventbrite data stored in api object's lastData instance variable"});
+       },
+   test_grab_events_api: function(req, res) {
+          eventsAPI.grab(req,res);
+       },
 };
+
 
 module.exports = controllers;
