@@ -5,7 +5,7 @@ var eventbrite = new sourceConstructor({
 	    paramMap: {"city": "city"}, 
 	    apiName: 'Ticketmaster',
 	    formatEvents: function(res) {
-	    	var formattedEvents = {}
+	    	var formattedEvents = []
 	    	for(var i = 0; i<5; i++){
 			    var event = {
 			    	event_name: res["_embedded"]["events"][i]["name"],
@@ -16,7 +16,7 @@ var eventbrite = new sourceConstructor({
 				    tags: ["ticketmaster"],
 				    image_url: res["_embedded"]["events"][i]["images"]
 			    }
-			    formattedEvents[res["_embedded"]["events"][i]["id"]]= event;
+			    formattedEvents.push(event);
 			}
 			return formattedEvents;
 	    }

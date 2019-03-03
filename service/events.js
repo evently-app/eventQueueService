@@ -4,24 +4,55 @@ var sourceConstructor = require('./sourceConstructor');
 const apiKey = process.env.EVENTBRITE_API_KEY;
 var eventbrite = require('./eventbrite');
 var objectMerge = require('object-merge');
-const admin = require('firebase-admin');
-//var serviceAccount = require('path/to/serviceAccountKey.json');
 var size = 0
-
-
-//initialize Firebase 
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: "https://evently-db.firebaseio.com"
-// });
-
-// var db = admin.firestore();
-
 var sourceObjects = [require('../sources/eventbrite')]
 
+//Firebase Initialization
+const admin = require('firebase-admin');
+var serviceAccount = require('../evently-key.json'); //Not to be put on github, add path to your service account.
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+var db = admin.firestore();
+
+//Helper Functions.
 function cache(id, event){
   var docRef = db.collection('eventCache').doc(id);
   var eventCache = docRef.set(event);
+}
+
+//Helper Function for flattening an array.
+function flatten(arr) {
+  return arr.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
+}
+
+//Given a list of Event objects, sort them using distance and time to go.
+//distance will be taken from user, and added as a param @Bo Pang
+//Future: Work out Machine Learning Algorithm for the same.
+function sort(arr) {
+  return arr;
+}
+
+
+//Wrapper function which sorts the array and then sends it.
+function sortAndSend(arr, res) {
+  arr = sort(arr);
+  res.send(arr);
+}
+
+// Function that returns a new array, of all the elems from arr,
+// other than those whose ids are in toRemove.
+function filterSeenEvents(arr, toRemove) {
+  var toReturn = [];
+  for (var i = 0; i < arr.length; i++) {
+    var elem = arr[i];
+    if (!toRemove.includes(elem.id)) {
+      toReturn.push(elem);
+    }
+  }
+  return toReturn;
 }
 
 var events = {
@@ -42,9 +73,27 @@ var events = {
         }
 
         //merge them!
-        var resultObject = formattedEvents.reduce(((r, c) => Object.assign(r, c)), {})
-        res.send(resultObject)
+        var resultObject = flatten(formattedEvents)
+
+        //filter
+        var user = '8xlgDSoBvHKW8NAuiS3n' //get from req, hardcoded right now.
+        var userRef = db.collection('users').doc(user);
+        var getDoc = userRef.get()
+          .then(doc => {
+            if (!doc.exists) {
+              console.log('User Not Found');
+              sortAndSend(resultObject, res);
+            } else {
+              filteredResultObject = filterSeenEvents(resultObject, doc.data().events)
+              sortAndSend(filteredResultObject, res);
+            }
+          })
+          .catch(err => {
+            console.log('Error getting document', err);
+            sortAndSend(resultObject, res);
+          });
       })
+
 
     }
 };

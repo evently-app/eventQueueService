@@ -6,7 +6,7 @@ var eventbrite = new sourceConstructor({
 	    paramMap: {"city": "location.address"}, 
 	    apiName: 'Eventbrite',
 	    formatEvents: function(res) {
-	    	var formattedEvents = {}
+	    	var formattedEvents = [];
 	    	for(var i = 0; i<5; i++) {
 		    	var event = {
 			    	event_name: res["events"][i]["name"]["text"],
@@ -17,7 +17,7 @@ var eventbrite = new sourceConstructor({
 				    tags: ["eventbrite"],
 				    image_url: res["events"][i]["logo"]["url"]
 		    	}
-		      	formattedEvents[res["events"][i]["id"]]= event; 
+		      	formattedEvents.push(event); 
     		}
     		return formattedEvents;
 	    }
