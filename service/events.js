@@ -57,7 +57,6 @@ function filterSeenEvents(arr, toRemove) {
 
 var events = {
    grab: function(req, res) {
-      //var sourceObjects = [];
       var formattedEvents = []; 
 
       // send requests with each source
