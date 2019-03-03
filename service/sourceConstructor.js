@@ -3,12 +3,13 @@
 var request = require('request');
 
 class sourceConstructor {
-	constructor(url, apiTerm, token, paramMap, apiName){
-		this.url = url;
-		this.apiTerm = apiTerm; // sources vary in how they refer to the token (e.g "token" or "apikey")
-		this.token = token;
-		this.paramMap = paramMap;
-		this.apiName = apiName;
+	constructor(params){
+		this.url = params.url;
+		this.apiTerm = params.apiTerm; // sources vary in how they refer to the token (e.g "token" or "apikey")
+		this.token = params.token;
+		this.paramMap = params.paramMap;
+		this.apiName = params.apiName;
+		this.formatEvents = params.formatEvents;
 	}
 
 	grab(req, res){

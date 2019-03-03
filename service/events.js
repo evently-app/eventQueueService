@@ -17,48 +17,7 @@ var size = 0
 
 // var db = admin.firestore();
 
-var sourceList = ["Eventbrite", "Ticketmaster"]
-
-function formatEventObject(res, type){
-
-  var formattedEvents = {}
-  
-
-  if(type == "Eventbrite"){
-    for(var i = 0; i<5; i++){
-      var event = {
-      event_name: res["events"][i]["name"]["text"],
-      start_time: res["events"][i]["start"]["local"],
-      end_time: res["events"][i]["end"]["local"],
-      ticket_url: res["events"][i]["url"],
-      id: res["events"][i]["id"],
-      tags: ["eventbrite"],
-      image_url: res["events"][i]["logo"]["url"]
-      }
-      formattedEvents[res["events"][i]["id"]]= event  
-      //cache event ID 
-      //cache(event.id, event)
-    }
-  }
-
-  else if(type == "Ticketmaster"){
-    for(var i = 0; i<5; i++){
-      var event = {
-      event_name: res["_embedded"]["events"][i]["name"],
-      start_time: res["_embedded"]["events"][i]["dates"]["dateTime"],
-      end_time: null,
-      ticket_url: res["_embedded"]["events"][i]["url"],
-      id: res["_embedded"]["events"][i]["id"],
-      tags: ["ticketmaster"],
-      image_url: res["_embedded"]["events"][i]["images"]
-      }
-      formattedEvents[res["_embedded"]["events"][i]["id"]]= event  
-      //cache event ID 
-      //cache(event.id, event)
-    }
-  }
-   return formattedEvents
-}
+var sourceObjects = [require('../sources/eventbrite')]
 
 function cache(id, event){
   var docRef = db.collection('eventCache').doc(id);
@@ -67,18 +26,8 @@ function cache(id, event){
 
 var events = {
    grab: function(req, res) {
-      var sourceObjects = [];
+      //var sourceObjects = [];
       var formattedEvents = []; 
-
-      //create source request constructors 
-
-      //eventbrite 
-      sourceObjects.push(new sourceConstructor("https://www.eventbriteapi.com/v3/events/search/?", "token", 
-        process.env.EVENTBRITE_API_KEY || "testToken", {"city": "location.address"}, sourceList[0]));
-
-      //ticketmaster
-      sourceObjects.push(new sourceConstructor("https://app.ticketmaster.com/discovery/v2/events.json?", "apikey", process.env.TICKETMASTER_API_KEY, {"city": "city"}, sourceList[1]))
-
 
       // send requests with each source
       var requests = []
@@ -88,11 +37,11 @@ var events = {
 
       //wait for all requests to compelte, then format 
       Promise.all(requests).then(function (returnvals){
-        for(var i = 0; i < sourceList.length; i++){
-          formattedEvents.push(formatEventObject(returnvals[i], sourceList[i]))
+        for(var i = 0; i < sourceObjects.length; i++){
+          formattedEvents.push(sourceObjects[i].formatEvents(returnvals[i]))
         }
 
-        //merge them! 
+        //merge them!
         var resultObject = formattedEvents.reduce(((r, c) => Object.assign(r, c)), {})
         res.send(resultObject)
       })
