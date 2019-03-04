@@ -13,7 +13,7 @@ var controllers = {
        res.json(aboutInfo);
    },
    
-   get_distance: function(req, res) {
+   getDistance: function(req, res) {
            distance.find(req, res, function(err, dist) {
                if (err)
                    res.send(err);
@@ -21,7 +21,7 @@ var controllers = {
            });
        },
 
-    grab_events: function(req, res) {
+    grabEvents: function(req, res) {
            events.grab(req, res, function(err, dist) {
                if (err)
                    res.send(err);

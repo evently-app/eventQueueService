@@ -25,9 +25,6 @@ module.exports = {
 
 	// Calculate the time difference between two Date() object in milliseconds.
 	timeBetween: function ( date1, date2 ) {
-	  //Get 1 day in milliseconds
-	  var one_day=1000*60*60*24;
-
 	  // Convert both dates to milliseconds
 	  var date1_ms = date1.getTime();
 	  var date2_ms = date2.getTime();
