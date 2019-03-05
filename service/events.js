@@ -1,11 +1,12 @@
 var async = require('async');
 var request = require('request');
-var sourceConstructor = require('./sourceConstructor');
+var sourceConstructor = require('../classes/sourceconstructor');
 const apiKey = process.env.EVENTBRITE_API_KEY;
-var eventbrite = require('./eventbrite');
-var objectMerge = require('object-merge');
-var size = 0
 var sourceObjects = [require('../sources/eventbrite')]
+var utils = require('../utils.js');
+var sort = require('./sort.js');
+
+
 
 //Firebase Initialization
 const admin = require('firebase-admin');
@@ -21,25 +22,12 @@ function cache(id, event){
   var eventCache = docRef.set(event);
 }
 
-//Helper Function for flattening an array.
-function flatten(arr) {
-  return arr.reduce(function (flat, toFlatten) {
-    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-  }, []);
-}
-
-//Given a list of Event objects, sort them using distance and time to go.
-//distance will be taken from user, and added as a param @Bo Pang
-//Future: Work out Machine Learning Algorithm for the same.
-function sort(arr) {
-  return arr;
-}
 
 
 //Wrapper function which sorts the array and then sends it.
-function sortAndSend(arr, res) {
-  arr = sort(arr);
-  res.send(arr);
+function sortAndSend(events, res) {
+  sortedEvents = sort.sort(events);
+  res.send(sortedEvents);
 }
 
 // Function that returns a new array, of all the elems from arr,
@@ -54,6 +42,7 @@ function filterSeenEvents(arr, toRemove) {
   }
   return toReturn;
 }
+
 
 var events = {
    grab: function(req, res) {
@@ -72,7 +61,7 @@ var events = {
         }
 
         //merge them!
-        var resultObject = flatten(formattedEvents)
+        var resultObject = utils.flatten(formattedEvents)
 
         //filter
         var user = '8xlgDSoBvHKW8NAuiS3n' //get from req, hardcoded right now.

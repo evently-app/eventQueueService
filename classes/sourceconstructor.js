@@ -1,8 +1,9 @@
 'use strict';
 
 var request = require('request');
+var utils = require('../utils.js');
 
-class sourceConstructor {
+class SourceConstructor {
 	constructor(params){
 		this.url = params.url;
 		this.apiTerm = params.apiTerm; // sources vary in how they refer to the token (e.g "token" or "apikey")
@@ -11,6 +12,7 @@ class sourceConstructor {
 		this.apiName = params.apiName;
 		this.formatEvents = params.formatEvents;
 	}
+
 
 	grab(req, res){
 		var requestURL = this.getRequestUrl(req); 
@@ -28,6 +30,7 @@ class sourceConstructor {
 	   			});
 		});
 	}
+
 
 	mapToSourceParams(reqParams){
 		var sourceParams = {};
@@ -54,4 +57,4 @@ class sourceConstructor {
 
 }
 
-module.exports = sourceConstructor; 
+module.exports = SourceConstructor; 
