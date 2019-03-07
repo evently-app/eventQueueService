@@ -1,14 +1,43 @@
+const Geohash = require( '@parellin/geohash' );
+var zipcodes = require('zipcodes');
+var request = require('request');
 var SourceConstructor = require('../classes/sourceConstructor');
+
 var ticketmaster = new SourceConstructor({
 		url : "https://app.ticketmaster.com/discovery/v2/events.json?", 
 		apiTerm: "apikey", 
 	    token: process.env.TICKETMASTER_API_KEY, 
 	    paramMap: {"city": "city"}, 
 	    apiName: 'Ticketmaster',
+
 	    formatEvents: function(res) {
 	    	var formattedEvents = []
-	    	for(var i = 0; i<5; i++){
+	    	var responseSize = Object.keys(res["_embedded"]["events"]).length;
+	    	for(var i = 0; i<responseSize; i++){
+
 	    		try{
+
+	    			var venueRequest = "https://app.ticketmaster.com" +(res["_embedded"]["events"][i]["_links"]["venues"][0]["href"]) + "&" +this.apiTerm + "=" + this.token;
+	    			var location = 0; 
+	    			var locationInfo = {};
+	    			var getVenue = new Promise(function(resolve, reject) {
+	    				request(venueRequest,
+	    					function(error, response, body) {
+	    						if(!error && response.statusCode == 200){
+	    							response = JSON.parse(body);
+	    							resolve(response);
+
+	    						} else {
+	    							console.log(response.statusCode + response.body);
+	    						}
+	    					})
+	    			})
+
+	    			getVenue.then(function(result){
+	    				locationInfo = zipcodes.lookup(result["postalCode"]);
+	    				console.log("THIS IS HERE! ", locationInfo)
+	    			})
+
 				    var event = {
 				    	eventName: res["_embedded"]["events"][i]["name"],
 				    	startTime: res["_embedded"]["events"][i]["dates"]["dateTime"],
@@ -16,11 +45,13 @@ var ticketmaster = new SourceConstructor({
 					    ticketUrl: res["_embedded"]["events"][i]["url"],
 					    id: res["_embedded"]["events"][i]["id"],
 					    tags: ["ticketmaster"],
-					    imageUrl: res["_embedded"]["events"][i]["images"]
+					    imageUrl: res["_embedded"]["events"][i]["images"],
+					    latitude: locationInfo.latitude,
+					    longitude: locationInfo.longitude
 				    }
 
 				    // formattedEvents.push(new EventObject(event));
-				    formatEvents.push(event);
+				    formattedEvents.push(event);
 				}
 				catch(err){
 		    		console.log("An event from ticketmaster does not have all required fields.\n"+err.message);
@@ -29,4 +60,31 @@ var ticketmaster = new SourceConstructor({
 			}
 			return formattedEvents;
 	    }
-    });
+    }
+
+
+    );
+
+ticketmaster.getRequestUrl = function(req) {
+	//do stuff 
+	var requestURL = this.url;
+	var sourceParams = this.mapToSourceParams(req.params);
+
+	console.log("Source params")
+	console.log(req.params)
+
+	for (const [key, value] of Object.entries(sourceParams)) {
+		if(key != longitude && key != latitude){
+			requestURL += key + "=" + value + '&';
+		}
+	}
+
+	//convert to geohash 
+	requestURL += 'geoPoint=' + Geohash.encode(req.params.latitude, req.params.longitude, 7) + '&'
+	//add api key 
+	requestURL += this.apiTerm + "=" + this.token;
+
+	return requestURL;
+}
+
+module.exports = ticketmaster;

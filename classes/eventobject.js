@@ -20,7 +20,9 @@ class EventObject {
 		this.ticketUrl = params.ticketUrl;
 		this.id = params.id;
 		this.tags = params.tags;
-		this.imageUrl = params.imageUrl
+		this.imageUrl = params.imageUrl;
+		this.latitude = params.latitude;
+		this.longitude = params.longitude; 
 	}
 
 }

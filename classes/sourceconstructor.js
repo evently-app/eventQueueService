@@ -13,9 +13,9 @@ class SourceConstructor {
 		this.formatEvents = params.formatEvents;
 	}
 
-
 	grab(req, res){
 		var requestURL = this.getRequestUrl(req); 
+		console.log(requestURL)
 
 		return new Promise(function(resolve, reject) {
   				request(requestURL,
@@ -30,7 +30,6 @@ class SourceConstructor {
 	   			});
 		});
 	}
-
 
 	mapToSourceParams(reqParams){
 		var sourceParams = {};
@@ -49,7 +48,11 @@ class SourceConstructor {
 		for (const [key, value] of Object.entries(sourceParams)) {
 			requestURL += key + "=" + value + '&';
 		}
+		if(this.apiName == "Eventbrite"){
+			requestURL += "expand=venue&"
+		}
 
+		console.log("the request is: ", requestURL)
 		requestURL += this.apiTerm + "=" + this.token;
 
 		return requestURL;
