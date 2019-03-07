@@ -1,5 +1,3 @@
-var async = require('async');
-var request = require('request');
 var sourceConstructor = require('../classes/sourceconstructor');
 const apiKey = process.env.EVENTBRITE_API_KEY;
 var sourceObjects = [require('../sources/eventbrite')]

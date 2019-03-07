@@ -1,6 +1,6 @@
 'use strict';
 
-var request = require('request');
+var rp = require('request-promise');
 var utils = require('../utils.js');
 
 class SourceConstructor {
@@ -14,21 +14,22 @@ class SourceConstructor {
 	}
 
 
-	grab(req, res){
+	async grab(req, res){
 		var requestURL = this.getRequestUrl(req); 
 
-		return new Promise(function(resolve, reject) {
-  				request(requestURL,
-			       	function (error, response, body) {
-			           if (!error && response.statusCode == 200) {
-			               response = JSON.parse(body);
-			               resolve(response);
-			           } else {
-			               console.log(response.statusCode + response.body);
-			               res.send({"error!":response.statusCode + response.body});
-			    		}
-	   			});
-		});
+		var options = {
+		    uri: requestURL,
+		    json: true 
+		};
+ 
+		return rp(options)
+		    .then(function (data) {
+		        return data
+		    })
+		    .catch(function (err) {
+		        console.log(err.statusCode + err.body);
+			    res.send({"error!":err.statusCode + err.body});
+		    });
 	}
 
 
