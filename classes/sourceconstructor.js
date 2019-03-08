@@ -13,7 +13,7 @@ class SourceConstructor {
 		this.formatEvents = params.formatEvents;
 	}
 
-	grab(req, res){
+	grab(req, res) {
 		var requestURL = this.getRequestUrl(req); 
 		console.log(requestURL)
 

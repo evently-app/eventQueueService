@@ -10,7 +10,7 @@ var ticketmaster = new SourceConstructor({
     paramMap: {"city": "city"}, 
     apiName: 'Ticketmaster',
 
-    formatEvents: function(res) {
+    formatEvents: function (res){
     	var formattedEvents = []
     	var responseSize = Object.keys(res["_embedded"]["events"]).length;
     	for(var i = 0; i<responseSize; i++){
@@ -31,7 +31,6 @@ var ticketmaster = new SourceConstructor({
 				    longitude: locationInfo.longitude
 			    }
 
-			    // formattedEvents.push(new EventObject(event));
 			    formattedEvents.push(event);
 			}
 			catch(err){
@@ -43,12 +42,8 @@ var ticketmaster = new SourceConstructor({
   });
 
 ticketmaster.getRequestUrl = function(req) {
-	//do stuff 
 	var requestURL = this.url;
 	var sourceParams = this.mapToSourceParams(req.params);
-
-	console.log("Source params")
-	console.log(req.params)
 
 	for (const [key, value] of Object.entries(sourceParams)) {
 		if(key != longitude && key != latitude){
@@ -57,7 +52,7 @@ ticketmaster.getRequestUrl = function(req) {
 	}
 
 	//convert to geohash 
-	requestURL += 'geoPoint=' + Geohash.encode(req.params.latitude, req.params.longitude, 7) + '&'
+	requestURL += 'geoPoint=' + Geohash.encode(req.params.latitude, -req.params.longitude, 7) + '&'
 	//add api key 
 	requestURL += this.apiTerm + "=" + this.token;
 
