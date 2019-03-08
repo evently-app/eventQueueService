@@ -16,7 +16,8 @@
     "firebase-admin": "^7.0.0",
     "object-merge": "^2.5.1",
     "request": "^2.88.0",
-    "zipcodes": "^8.0.0"
+    "zipcodes": "^8.0.0",
+    "request-promise": "^4.2.4"
   },
   "devDependencies": {
     "firebase": "^5.8.5"
