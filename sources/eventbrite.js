@@ -41,4 +41,19 @@ var eventbrite = new SourceConstructor({
 	    }
     });
 
+eventbrite.getRequestUrl = function(req){
+		var requestURL = this.url;
+		var sourceParams = this.mapToSourceParams(req.params);
+
+		for (const [key, value] of Object.entries(sourceParams)) {
+			requestURL += key + "=" + value + '&';
+		}
+		
+		requestURL += "expand=venue&"; 
+
+		requestURL += this.apiTerm + "=" + this.token;
+
+		return requestURL;
+}
+
 module.exports = eventbrite;

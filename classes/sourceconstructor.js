@@ -49,9 +49,6 @@ class SourceConstructor {
 		for (const [key, value] of Object.entries(sourceParams)) {
 			requestURL += key + "=" + value + '&';
 		}
-		if(this.apiName == "Eventbrite"){
-			requestURL += "expand=venue&"
-		}
 
 		requestURL += this.apiTerm + "=" + this.token;
 
