@@ -10,9 +10,9 @@ admin.initializeApp({
   credential: admin.credential.cert({
     projectId: "evently-db",
     clientEmail: 'firebase-adminsdk-nktsn@evently-db.iam.gserviceaccount.com',
-    privateKey: process.env.FIREBASE_KEY
+    privateKey: process.env.FIREBASE_KEY.replace(/\\n/g, '\n')
   }),
-  databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
+  databaseURL: 'https://evently-db.firebaseio.com'
 });
 var db = admin.firestore();
 
