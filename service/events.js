@@ -56,7 +56,6 @@ var events = {
       Promise.all(requests).then(function (returnvals){
         for(var i = 0; i < sourceObjects.length; i++){
           formattedEvents.push(sourceObjects[i].formatEvents(returnvals[i]))
-          console.log("finished one.")
         }
 
         //merge them!
