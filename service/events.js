@@ -44,7 +44,6 @@ var events = {
    grab: function(req, res) {
       var formattedEvents = []; 
 
-      console.log("I am here!")
 
       // send requests with each source
       var requests = []
