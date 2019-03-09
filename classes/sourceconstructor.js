@@ -53,7 +53,6 @@ class SourceConstructor {
 			requestURL += "expand=venue&"
 		}
 
-		console.log("the request is: ", requestURL)
 		requestURL += this.apiTerm + "=" + this.token;
 
 		return requestURL;
