@@ -4,12 +4,15 @@ var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticke
 var utils = require('../utils.js');
 var sort = require('./sort.js');
 
-
 //Firebase Initialization
 const admin = require('firebase-admin');
-var serviceAccount = require('../evently-key.json'); //Not to be put on github, add path to your service account.
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert({
+    projectId: "evently-db",
+    clientEmail: 'firebase-adminsdk-nktsn@evently-db.iam.gserviceaccount.com',
+    privateKey: process.env.FIREBASE_KEY
+  }),
+  databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
 });
 var db = admin.firestore();
 
