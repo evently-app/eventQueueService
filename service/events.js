@@ -41,9 +41,8 @@ function filterSeenEvents(arr, toRemove) {
 
 
 var events = {
-   grab: function(req, res) {
+  grab: async function(req, res) {
       var formattedEvents = []; 
-
 
       // send requests with each source
       var requests = []
@@ -51,33 +50,41 @@ var events = {
         requests.push(sourceObjects[i].grab(req, res));
       }
 
-      //wait for all requests to compelte, then format 
-      Promise.all(requests).then(function (returnvals){
-        for(var i = 0; i < sourceObjects.length; i++){
-          formattedEvents.push(sourceObjects[i].formatEvents(returnvals[i]))
+      //wait for all requests to complete, then format 
+      var returnvals = await Promise.all(requests)
+      for(var i = 0; i < sourceObjects.length; i++){
+        formattedEvents.push(sourceObjects[i].formatEvents(returnvals[i]))
+
+        //save events to db
+        for (var j = 0; j < formattedEvents[i].length; j++) {
+          //db id is apiName + api's eventId
+          var eventId = sourceObjects[i].apiName + formattedEvents[i][j].id
+          var eventRef = db.collection('events').doc(eventId)
+          eventRef.set(formattedEvents[i][j]) //async set, no await
         }
+      }
+      
+      //merge them!
+      var resultObject = utils.flatten(formattedEvents)
 
-        //merge them!
-        var resultObject = utils.flatten(formattedEvents)
-
-        //filter
-        var user = '8xlgDSoBvHKW8NAuiS3n' //get from req, hardcoded right now.
-        var userRef = db.collection('users').doc(user);
-        var getDoc = userRef.get()
-          .then(doc => {
-            if (!doc.exists) {
-              console.log('User Not Found');
-              sortAndSend(resultObject, res);
-            } else {
-              filteredResultObject = filterSeenEvents(resultObject, doc.data().events)
-              sortAndSend(filteredResultObject, res);
-            }
-          })
-          .catch(err => {
-            console.log('Error getting document', err);
+      //filter
+      var user = '8xlgDSoBvHKW8NAuiS3n' //get from req, hardcoded right now.
+      var userRef = db.collection('users').doc(user);
+      var getDoc = userRef.get()
+        .then(doc => {
+          if (!doc.exists) {
+            console.log('User Not Found');
             sortAndSend(resultObject, res);
-          });
-      })
+          } else {
+            filteredResultObject = filterSeenEvents(resultObject, doc.data().events)
+            sortAndSend(filteredResultObject, res);
+          }
+        })
+        .catch(err => {
+          console.log('Error getting document', err);
+          sortAndSend(resultObject, res);
+        });
+      
 
 
     }
