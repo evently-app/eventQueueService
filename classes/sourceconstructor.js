@@ -16,7 +16,6 @@ class SourceConstructor {
 
 	async grab(req, res){
 		var requestURL = this.getRequestUrl(req); 
-		console.log(requestURL)
 
 		var options = {
 		    uri: requestURL,
