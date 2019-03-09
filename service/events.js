@@ -3,16 +3,26 @@ const apiKey = process.env.EVENTBRITE_API_KEY;
 var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster')]
 var utils = require('../utils.js');
 var sort = require('./sort.js');
+var admin = require("firebase-admin");
 
+var serviceAccount = require("path/to/serviceAccountKey.json");
 
-
-//Firebase Initialization
-const admin = require('firebase-admin');
-var serviceAccount = require('../evently-key.json'); //Not to be put on github, add path to your service account.
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://evently-db.firebaseio.com"
 });
-var db = admin.firestore();
+firebase.initializeApp(config);
+
+  // // Get a reference to the database service
+  // var database = firebase.database();
+
+// //Firebase Initialization
+// const admin = require('firebase-admin');
+// var serviceAccount = require('../evently-key.json'); //Not to be put on github, add path to your service account.
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
+// var db = admin.firestore();
 
 //Helper Functions.
 function cache(id, event){

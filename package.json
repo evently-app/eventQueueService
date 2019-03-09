@@ -14,10 +14,11 @@
     "async": "^2.6.2",
     "express": "^4.16.4",
     "firebase-admin": "^7.0.0",
+    "grpc": "^1.19.0",
     "object-merge": "^2.5.1",
     "request": "^2.88.0",
-    "zipcodes": "^8.0.0",
-    "request-promise": "^4.2.4"
+    "request-promise": "^4.2.4",
+    "zipcodes": "^8.0.0"
   },
   "devDependencies": {
     "firebase": "^5.8.5"
