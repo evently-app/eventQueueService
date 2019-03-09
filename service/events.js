@@ -1,6 +1,6 @@
 var sourceConstructor = require('../classes/sourceconstructor');
 const apiKey = process.env.EVENTBRITE_API_KEY;
-var sourceObjects = [require('../sources/eventbrite')]
+var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster')]
 var utils = require('../utils.js');
 var sort = require('./sort.js');
 
@@ -19,8 +19,6 @@ function cache(id, event){
   var docRef = db.collection('eventCache').doc(id);
   var eventCache = docRef.set(event);
 }
-
-
 
 //Wrapper function which sorts the array and then sends it.
 function sortAndSend(events, res) {
@@ -45,6 +43,7 @@ function filterSeenEvents(arr, toRemove) {
 var events = {
    grab: function(req, res) {
       var formattedEvents = []; 
+
 
       // send requests with each source
       var requests = []

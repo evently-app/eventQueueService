@@ -10,11 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "@firebase/firestore": "^1.0.5",
+    "@parellin/geohash": "^1.0.7",
     "async": "^2.6.2",
     "express": "^4.16.4",
     "firebase-admin": "^7.0.0",
     "object-merge": "^2.5.1",
     "request": "^2.88.0",
+    "zipcodes": "^8.0.0",
     "request-promise": "^4.2.4"
   },
   "devDependencies": {

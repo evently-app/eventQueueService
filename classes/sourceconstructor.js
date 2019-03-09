@@ -32,7 +32,6 @@ class SourceConstructor {
 		    });
 	}
 
-
 	mapToSourceParams(reqParams){
 		var sourceParams = {};
 		for (const [key, value] of Object.entries(this.paramMap)) {
@@ -49,6 +48,9 @@ class SourceConstructor {
 
 		for (const [key, value] of Object.entries(sourceParams)) {
 			requestURL += key + "=" + value + '&';
+		}
+		if(this.apiName == "Eventbrite"){
+			requestURL += "expand=venue&"
 		}
 
 		requestURL += this.apiTerm + "=" + this.token;
