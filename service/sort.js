@@ -65,7 +65,6 @@ var sort =  {
 				event['remainingTime'], minRemainingTime, maxRemainingTime, 0, 1);
 			event['score'] += timeScore;
 		}
-		console.log("time score added");
 		return events;
 	},
 
@@ -90,7 +89,6 @@ var sort =  {
 			// console.log(timeScore);
 			event['score'] += timeScore;
 		}
-		console.log("distance score added");
 		return events;
 	}
 
