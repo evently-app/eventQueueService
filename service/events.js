@@ -73,11 +73,15 @@ var events = {
       var getDoc = userRef.get()
         .then(doc => {
           if (!doc.exists) {
+            var userData = {'longitude':req.params.longitude,'latitude':req.params.latitude};
             console.log('User Not Found');
-            sortAndSend(resultObject, res, null);
+            sortAndSend(resultObject, res, userData);
           } else {
+            var userData = doc.data();
+            userData.longitude = req.params.longitude;
+            userData.latitude = req.params.latitude;
             filteredResultObject = filterSeenEvents(resultObject, doc.data().events)
-            sortAndSend(filteredResultObject, res, doc.data());
+            sortAndSend(filteredResultObject, res, userData);
           }
         })
         .catch(err => {

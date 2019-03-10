@@ -4,6 +4,8 @@ var utils = require('../utils.js');
 var sort =  {
 
 	//Given a list of Event objects, sort them by assigned/calculated score.
+	// Param: events: all the events returned from API
+	// userData: information about current user, like coordinate, and preference
 	sort: function(events,userData){
 
 		scoredEvents = this.addScore(events,userData);
@@ -27,9 +29,11 @@ var sort =  {
 		if (!userData){
 			return scoredEvents
 		}
+		
 		scoredEvents = this.addDistanceScore(scoredEvents,
 						userData.latitude,
 						userData.longitude);
+		
 		// get users' coordinates from firestore
 		/*
 		*
