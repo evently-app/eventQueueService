@@ -21,8 +21,8 @@ function cache(id, event){
 }
 
 //Wrapper function which sorts the array and then sends it.
-function sortAndSend(events, res) {
-  sortedEvents = sort.sort(events);
+function sortAndSend(events, res, userData) {
+  sortedEvents = sort.sort(events,userData);
   res.send(sortedEvents);
 }
 
@@ -73,11 +73,15 @@ var events = {
       var getDoc = userRef.get()
         .then(doc => {
           if (!doc.exists) {
+            var userData = {'longitude':req.params.longitude,'latitude':req.params.latitude};
             console.log('User Not Found');
-            sortAndSend(resultObject, res);
+            sortAndSend(resultObject, res, userData);
           } else {
+            var userData = doc.data();
+            userData.longitude = req.params.longitude;
+            userData.latitude = req.params.latitude;
             filteredResultObject = filterSeenEvents(resultObject, doc.data().events)
-            sortAndSend(filteredResultObject, res);
+            sortAndSend(filteredResultObject, res, userData);
           }
         })
         .catch(err => {
