@@ -84,10 +84,10 @@ var sort =  {
 		for (var i = 0; i < events.length; i++) {
 			var event = events[i];
 			// The math part
-			var timeScore = utils.scaleDown(
+			var distanceScore = utils.scaleDown(
 				event['distance'], minDistance, maxDistance, 0, 1);
 			// console.log(timeScore);
-			event['score'] += timeScore;
+			event['score'] += distanceScore;
 		}
 		return events;
 	}
