@@ -6,7 +6,7 @@ var SourceConstructor = require('../classes/sourceconstructor');
 var ticketmaster = new SourceConstructor({
 	url : "https://app.ticketmaster.com/discovery/v2/events.json?", 
 	apiTerm: "apikey", 
-    token: process.env.TICKETMASTER_API_KEY, 
+    token: process.env.TICKETMASTER_API_KEY || "dysge4sSXLgsagQgVKabG3bRcV4qbCrq", 
     paramMap: {"city": "city"}, 
     apiName: 'Ticketmaster',
 
@@ -21,7 +21,7 @@ var ticketmaster = new SourceConstructor({
 
 			    var event = {
 			    	eventName: res["_embedded"]["events"][i]["name"],
-			    	startTime: res["_embedded"]["events"][i]["dates"]["dateTime"],
+			    	startTime: res["_embedded"]["events"][i]["dates"]["dateTime"] || null,
 				    endTime: null,
 				    ticketUrl: res["_embedded"]["events"][i]["url"],
 				    id: res["_embedded"]["events"][i]["id"],
@@ -52,7 +52,7 @@ ticketmaster.getRequestUrl = function(req) {
 	}
 
 	//convert to geohash 
-	requestURL += 'geoPoint=' + Geohash.encode(req.params.latitude, -req.params.longitude, 7) + '&'
+	requestURL += 'geoPoint=' + Geohash.encode(req.params.latitude, req.params.longitude, 7) + '&'
 	//add api key 
 	requestURL += this.apiTerm + "=" + this.token;
 
