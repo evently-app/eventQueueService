@@ -6,7 +6,7 @@ var SourceConstructor = require('../classes/sourceconstructor');
 var ticketmaster = new SourceConstructor({
 	url : "https://app.ticketmaster.com/discovery/v2/events.json?", 
 	apiTerm: "apikey", 
-    token: process.env.TICKETMASTER_API_KEY || "dysge4sSXLgsagQgVKabG3bRcV4qbCrq", 
+    token: process.env.TICKETMASTER_API_KEY, 
     paramMap: {"city": "city"}, 
     apiName: 'Ticketmaster',
 

@@ -2,7 +2,7 @@ var SourceConstructor = require('../classes/sourceconstructor');
 var eventbrite = new SourceConstructor({
 		url : "https://www.eventbriteapi.com/v3/events/search/?", 
 		apiTerm: "token", 
-	    token: process.env.EVENTBRITE_API_KEY || '5XU2X3GXCDU2MLZ7RZVH', 
+	    token: process.env.EVENTBRITE_API_KEY, 
 	    paramMap: {
 	    	"latitude": "location.latitude",
 	    	"longitude": "location.longitude",
