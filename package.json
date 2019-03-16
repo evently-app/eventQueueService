@@ -12,12 +12,15 @@
     "@firebase/firestore": "^1.0.5",
     "@parellin/geohash": "^1.0.7",
     "async": "^2.6.2",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
     "express": "^4.16.4",
     "firebase-admin": "^7.0.0",
+    "mocha": "^6.0.2",
     "object-merge": "^2.5.1",
     "request": "^2.88.0",
-    "zipcodes": "^8.0.0",
-    "request-promise": "^4.2.4"
+    "request-promise": "^4.2.4",
+    "zipcodes": "^8.0.0"
   },
   "devDependencies": {
     "firebase": "^5.8.5"
