@@ -1,11 +1,15 @@
-var chai = require('chai')
+const chai = require('chai')
   , chaiHttp = require('chai-http');
 chai.use(chaiHttp);
+const eventbriteSrcObj = require('../sources/eventbrite');
+const assert = require('assert');
 
-var expect = chai.expect;
+const expect = chai.expect;
 
 
 // *****ASYNC CURRENTLY NOT WORKING, UNSURE WHY
+
+// Should limit the number of api calls to eventbrite to stay within our api call limits
 
 describe('eventbriteSimpleAPICall', function() {
   this.timeout(5000);
@@ -21,7 +25,7 @@ describe('eventbriteSimpleAPICall', function() {
 	it('longitude + latitude + radius', async function() { 
 	  const res = await chai.request('https://www.eventbriteapi.com/v3/events')
 	  .get('/search')
-	  .query({'location.longitude': '41.310726', 'location.latitude': '-72.929916',
+	  .query({'location.longitude': '-72.929916', 'location.latitude': '41.310726',
 	  	'location.within': '3km', 'token': process.env.EVENTBRITE_API_KEY});
 	  expect(res).to.have.status(200);
 	});
@@ -32,5 +36,29 @@ describe('eventbriteSimpleAPICall', function() {
 	  .query({'location.address': 'newhaven', "expand":"venue", 'token': process.env.EVENTBRITE_API_KEY});
 	  expect(res).to.have.status(200);
 	});
+  });
+});
+
+
+describe('EventbriteCallWithSourceObj', function() {
+  this.timeout(5000);
+  const mockReq = {params: {'latitude': '41.310726', 'longitude': '-72.929916', 'radius': '5km'}};
+  const mockRes = {};
+
+  it('EventbriteCall with source object', async function() { 
+	  const res = await eventbriteSrcObj.grab(mockReq, mockRes);
+	  assert(res.events.length > 0);
+  });
+
+  // import eventbrite source obj
+  // feed it req object
+  // check res status code
+});
+
+describe('eventbriteDataFormat', function() {
+  this.timeout(5000);
+
+  describe('#differentParams', function() {
+
   });
 });
