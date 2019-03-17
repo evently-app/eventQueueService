@@ -49,16 +49,17 @@ describe('EventbriteCallWithSourceObj', function() {
 	  const res = await eventbriteSrcObj.grab(mockReq, mockRes);
 	  assert(res.events.length > 0);
   });
-
-  // import eventbrite source obj
-  // feed it req object
-  // check res status code
 });
+
 
 describe('eventbriteDataFormat', function() {
   this.timeout(5000);
+  const mockReq = {params: {'latitude': '41.310726', 'longitude': '-72.929916', 'radius': '5km'}};
+  const mockRes = {};
 
-  describe('#differentParams', function() {
-
+  it('checking formatting function for eventbrite', async function() { 
+	  const res = await eventbriteSrcObj.grab(mockReq, mockRes);
+	  const formatted = eventbriteSrcObj.formatEvents(res);
+	  assert(formatted.length > 0);
   });
 });
