@@ -15,8 +15,6 @@ var eventbrite = new SourceConstructor({
 	    	var responseSize = Object.keys(res["events"]).length;
 	    	for(var i = 0; i<responseSize; i++) {
 		    	
-		    	// Catch any error caused by their API. 
-		    	// For example, an event does not any required field
 		    	var event = {
 			    	eventName: res["events"][i]["name"]["text"],
 				    startTime: res["events"][i]["start"]["local"],
@@ -28,6 +26,7 @@ var eventbrite = new SourceConstructor({
 				    longitude: res["events"][i]["venue"]["address"]["longitude"]
 		    	}
 
+		    	// check if any fields we try to retrieve from data are invalid
 		    	for (const [key, value] of Object.entries(event)){
 		    		if (value == undefined){ // as opposed to null when the field is valid but has no info
 		    			throw "The source field involving " + key + "is invalid";
