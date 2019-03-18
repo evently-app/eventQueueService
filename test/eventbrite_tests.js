@@ -7,7 +7,7 @@ const assert = require('assert');
 const expect = chai.expect;
 
 
-// *****ASYNC CURRENTLY NOT WORKING, UNSURE WHY
+// ***** TESTS WORK, BUT ASYNC CURRENTLY NOT WORKING, UNSURE WHY. WE MAY ALSO WANT TO DELIBERATELY STICK WITH SYNCHRONOUS
 
 // Should limit the number of api calls to eventbrite to stay within our api call limits
 
