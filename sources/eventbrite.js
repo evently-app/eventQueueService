@@ -17,24 +17,24 @@ var eventbrite = new SourceConstructor({
 		    	
 		    	// Catch any error caused by their API. 
 		    	// For example, an event does not any required field
-		    	try{
-			    	var event = {
-				    	eventName: res["events"][i]["name"]["text"],
-					    startTime: res["events"][i]["start"]["local"],
-					    endTime: res["events"][i]["end"]["local"],
-					    ticketUrl: res["events"][i]["url"],
-					    id: res["events"][i]["id"],
-					    tags: ["eventbrite"],
-					    //imageUrl: res["events"][i]["logo"]["url"],
-					    latitude: res["events"][i]["venue"]["address"]["latitude"],
-					    longitude: res["events"][i]["venue"]["address"]["longitude"]
-			    	}
-			      	// formattedEvents.push(new EventObject(event)); 
-			      	formattedEvents.push(event);
+		    	var event = {
+			    	eventName: res["events"][i]["name"]["text"],
+				    startTime: res["events"][i]["start"]["local"],
+				    endTime: res["events"][i]["end"]["local"],
+				    ticketUrl: res["events"][i]["url"],
+				    id: res["events"][i]["id"],
+				    tags: ["eventbrite"],
+				    latitude: res["events"][i]["venue"]["address"]["latitude"],
+				    longitude: res["events"][i]["venue"]["address"]["longitude"]
 		    	}
-		    	catch(err){
-		    		console.log("An event from eventbrite does not have all required fields.\n"+err.message);
+
+		    	for (const [key, value] of Object.entries(event)){
+		    		if (value == undefined){ // as opposed to null when the field is valid but has no info
+		    			throw "The source field involving " + key + "is invalid";
+		    		}
 		    	}
+
+			    formattedEvents.push(event);
 
     		}
     		return formattedEvents;
