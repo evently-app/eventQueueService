@@ -1,7 +1,7 @@
 const Geohash = require( '@parellin/geohash' );
 var zipcodes = require('zipcodes');
 var request = require('request');
-var SourceConstructor = require('../classes/sourceConstructor');
+var SourceConstructor = require('../classes/sourceconstructor');
 
 var ticketmaster = new SourceConstructor({
 	url : "https://app.ticketmaster.com/discovery/v2/events.json?", 

@@ -1,4 +1,4 @@
-var SourceConstructor = require('../classes/sourceConstructor');
+var SourceConstructor = require('../classes/sourceconstructor');
 var eventbrite = new SourceConstructor({
 		url : "https://www.eventbriteapi.com/v3/events/search/?", 
 		apiTerm: "token", 
