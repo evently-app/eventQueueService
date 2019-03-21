@@ -3,6 +3,11 @@ const apiKey = process.env.EVENTBRITE_API_KEY;
 var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster')]
 var utils = require('../utils.js');
 var sort = require('./sort.js');
+var express = require('express')
+var cors = require('cors')
+var app = express()
+ 
+app.use(cors())
 
 //Firebase Initialization
 const admin = require('firebase-admin');
