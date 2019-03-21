@@ -33,7 +33,7 @@ function sortAndSend(events, res, userData) {
   res.send(sortedEvents);
 }
 
-// Function that returns a new array, of all the elems from arr,
+// /Function that returns a new array, of all the elems from arr,
 // other than those whose ids are in toRemove.
 function filterSeenEvents(arr, toRemove) {
   var toReturn = [];
