@@ -25,7 +25,7 @@ var eventbrite = new SourceConstructor({
 					    ticketUrl: res["events"][i]["url"],
 					    id: res["events"][i]["id"],
 					    tags: ["eventbrite"],
-					    //imageUrl: res["events"][i]["logo"]["url"],
+					    imageUrl: res["events"][i]["logo"]["url"],
 					    latitude: res["events"][i]["venue"]["address"]["latitude"],
 					    longitude: res["events"][i]["venue"]["address"]["longitude"]
 			    	}

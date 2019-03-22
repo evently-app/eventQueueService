@@ -26,7 +26,7 @@ var ticketmaster = new SourceConstructor({
 				    ticketUrl: res["_embedded"]["events"][i]["url"],
 				    id: res["_embedded"]["events"][i]["id"],
 				    tags: ["ticketmaster"],
-				    imageUrl: res["_embedded"]["events"][i]["images"],
+				    imageUrl: res["_embedded"]["events"][i]["images"][0],
 				    latitude: locationInfo.latitude,
 				    longitude: locationInfo.longitude
 			    }
