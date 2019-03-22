@@ -20,9 +20,14 @@ var ticketmaster = new SourceConstructor({
     			var locationInfo = {};
     			locationInfo = zipcodes.lookup(res["_embedded"]["events"][i]["_embedded"]["venues"][0]["postalCode"]);
 
+    			if(res["_embedded"]["events"][i]["dates"]["start"]["dateTime"]== undefined){
+    				console.log("No start time found. Ignoring event.");
+    				continue; 
+    			}
+
 			    var event = {
 			    	eventName: res["_embedded"]["events"][i]["name"],
-			    	startTime: res["_embedded"]["events"][i]["dates"]["dateTime"] || null,
+			    	startTime: res["_embedded"]["events"][i]["dates"]["start"]["dateTime"],
 				    endTime: null,
 				    ticketUrl: res["_embedded"]["events"][i]["url"],
 				    id: res["_embedded"]["events"][i]["id"],
