@@ -1,4 +1,5 @@
 var SourceConstructor = require('../classes/sourceconstructor');
+
 var eventbrite = new SourceConstructor({
 		url : "https://www.eventbriteapi.com/v3/events/search/?", 
 		apiTerm: "token", 
@@ -15,7 +16,6 @@ var eventbrite = new SourceConstructor({
 	    	var responseSize = Object.keys(res["events"]).length;
 	    	//temporarily only loading 5 events 
 	    	for(var i = 0; i<5; i++) {
-		    	
 		    	// Catch any error caused by their API. 
 		    	// For example, an event does not any required field
 		    	try{
@@ -23,6 +23,7 @@ var eventbrite = new SourceConstructor({
 				    	eventName: res["events"][i]["name"]["text"],
 					    startTime: res["events"][i]["start"]["local"],
 					    endTime: res["events"][i]["end"]["local"],
+					    description: res["events"][i]["summary"],
 					    ticketUrl: res["events"][i]["url"],
 					    id: res["events"][i]["id"],
 					    tags: ["eventbrite"],
@@ -30,6 +31,48 @@ var eventbrite = new SourceConstructor({
 					    latitude: res["events"][i]["venue"]["address"]["latitude"],
 					    longitude: res["events"][i]["venue"]["address"]["longitude"]
 			    	}
+
+			    	var tags = []; 
+
+			    	if(event.description.toLowerCase().includes("free")){
+			    		tags.push("Free"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("party")){
+			    		tags.push("Party"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("show") || event.description.toLowerCase().includes("perform")){
+			    		tags.push("Performance"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("music") || event.description.toLowerCase().includes("dj") || event.description.toLowerCase().includes("hip hop")){
+			    		tags.push("Music"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("bar") || event.description.toLowerCase().includes("lounge")){
+			    		tags.push("Bar/Lounge"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("kids") || event.description.toLowerCase().includes("family")){
+			    		tags.push("Family Friendly"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("expo") || event.description.toLowerCase().includes("conference")){
+			    		tags.push("Conference"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("art") || event.description.toLowerCase().includes("culture")){
+			    		tags.push("Art/Culture"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("festival") || event.description.toLowerCase().includes("fair")){
+			    		tags.push("Festival"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("education") || event.description.toLowerCase().includes("seminar") || event.description.toLowerCase().includes("professor")){
+			    		tags.push("Educational"); 
+			    	}
+
+			    	event.tags = tags; 
+
+
+
+			    	console.log(event.description)
+			    	console.log(tags)
+			    	console.log("**********************************")
+
 			      	// formattedEvents.push(new EventObject(event)); 
 			      	formattedEvents.push(event);
 		    	}
@@ -57,4 +100,9 @@ eventbrite.getRequestUrl = function(req){
 		return requestURL;
 }
 
+eventbrite.makeTag = function(req) { 
+	console.log(HAHAHHA)
+}
+
 module.exports = eventbrite;
+
