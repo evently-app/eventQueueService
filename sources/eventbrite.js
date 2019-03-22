@@ -13,7 +13,8 @@ var eventbrite = new SourceConstructor({
 	    formatEvents: function(res) {
 	    	var formattedEvents = [];
 	    	var responseSize = Object.keys(res["events"]).length;
-	    	for(var i = 0; i<responseSize; i++) {
+	    	//temporarily only loading 5 events 
+	    	for(var i = 0; i<5; i++) {
 		    	
 		    	// Catch any error caused by their API. 
 		    	// For example, an event does not any required field
