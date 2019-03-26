@@ -8,7 +8,6 @@ const expect = chai.expect;
 
 
 // ***** TESTS WORK, BUT ASYNC CURRENTLY NOT WORKING, UNSURE WHY. WE MAY ALSO WANT TO DELIBERATELY STICK WITH SYNCHRONOUS
-
 // Should limit the number of api calls to eventbrite to stay within our api call limits
 
 describe('eventbriteSimpleAPICall', function() {
@@ -51,7 +50,7 @@ describe('EventbriteCallWithSourceObj', function() {
   });
 });
 
-
+// should use stub for this test. Will incorporate soon
 describe('eventbriteDataFormat', function() {
   this.timeout(5000);
   const mockReq = {params: {'latitude': '41.310726', 'longitude': '-72.929916', 'radius': '5km'}};
