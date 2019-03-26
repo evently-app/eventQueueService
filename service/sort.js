@@ -54,6 +54,7 @@ var sort =  {
 			var event = events[i];
 			event['score'] = 0
 			event['remainingTime'] = 
+				events[i]['startTime'] == null ? maxRemainingTime : // temporary code for trying to get yaleeventscalendar to work
 				utils.timeBetween(new Date(),new Date(event['startTime']));
 			maxRemainingTime = Math.max(maxRemainingTime,event['remainingTime']);
 			minRemainingTime = Math.min(minRemainingTime,event['remainingTime']);
@@ -77,6 +78,7 @@ var sort =  {
 			var event = events[i];
 			event['score'] = 0
 			event['distance'] = 
+				events[i]['latitude'] == null ? maxDistance :  // temporary code for trying to get yaleeventscalendar to work
 				utils.distanceBetween(userLat,userLong,events[i]['latitude'],events[i]['longitude']);
 			maxDistance = Math.max(maxDistance,event['distance']);
 			minDistance = Math.min(minDistance,event['distance']);

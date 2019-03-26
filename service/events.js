@@ -1,6 +1,6 @@
 var sourceConstructor = require('../classes/sourceconstructor');
 const apiKey = process.env.EVENTBRITE_API_KEY;
-var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster')]
+var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster'), require('../sources/yaleeventscalendar')]
 var utils = require('../utils.js');
 var sort = require('./sort.js');
 
