@@ -10,3 +10,4 @@ To run locally:
 
 To run mocha/chai tests (once they're ready):
 1. run `./node_modules/mocha/bin/mocha`
+2. To run a specific test `./node_modules/mocha/bin/mocha -f [test name]'
