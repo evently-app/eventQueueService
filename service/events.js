@@ -1,5 +1,4 @@
 var sourceConstructor = require('../classes/sourceconstructor');
-const apiKey = process.env.EVENTBRITE_API_KEY;
 var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster')]
 var utils = require('../utils.js');
 var sort = require('./sort.js');
@@ -9,7 +8,7 @@ const admin = require('firebase-admin');
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: "evently-db",
-    clientEmail: 'firebase-adminsdk-nktsn@evently-db.iam.gserviceaccount.com',
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     privateKey: process.env.FIREBASE_KEY.replace(/\\n/g, '\n')
   }),
   databaseURL: 'https://evently-db.firebaseio.com'
