@@ -2,6 +2,11 @@ var sourceConstructor = require('../classes/sourceconstructor');
 var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster')]
 var utils = require('../utils.js');
 var sort = require('./sort.js');
+var express = require('express')
+var cors = require('cors')
+var app = express()
+ 
+app.use(cors())
 
 //Firebase Initialization
 const admin = require('firebase-admin');
@@ -27,7 +32,7 @@ function sortAndSend(events, res, userData) {
   res.send(sortedEvents);
 }
 
-// Function that returns a new array, of all the elems from arr,
+// /Function that returns a new array, of all the elems from arr,
 // other than those whose ids are in toRemove.
 function filterSeenEvents(arr, toRemove) {
   var toReturn = [];

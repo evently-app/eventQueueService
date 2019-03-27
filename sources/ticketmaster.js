@@ -13,24 +13,36 @@ var ticketmaster = new SourceConstructor({
     formatEvents: function (res){
     	var formattedEvents = []
     	var responseSize = Object.keys(res["_embedded"]["events"]).length;
-    	for(var i = 0; i<responseSize; i++){
+    	//temporarily only loading 5 events 
+    	for(var i = 0; i<7; i++){
 
     		try{
     			var locationInfo = {};
     			locationInfo = zipcodes.lookup(res["_embedded"]["events"][i]["_embedded"]["venues"][0]["postalCode"]);
 
+    			if(res["_embedded"]["events"][i]["dates"]["start"]["dateTime"]== undefined){
+    				console.log("No start time found. Ignoring event.");
+    				continue; 
+    			}
+
 			    var event = {
 			    	eventName: res["_embedded"]["events"][i]["name"],
-			    	startTime: res["_embedded"]["events"][i]["dates"]["dateTime"] || null,
+			    	startTime: res["_embedded"]["events"][i]["dates"]["start"]["dateTime"],
 				    endTime: null,
 				    ticketUrl: res["_embedded"]["events"][i]["url"],
 				    id: res["_embedded"]["events"][i]["id"],
 				    tags: ["ticketmaster"],
-				    imageUrl: res["_embedded"]["events"][i]["images"],
+				    imageUrl: res["_embedded"]["events"][i]["images"][0]["url"],
 				    latitude: locationInfo.latitude,
 				    longitude: locationInfo.longitude
 			    }
 
+			    var tags = []; 
+			    tags.push(res["_embedded"]["events"][i]["classifications"][0]["segment"]["name"]);
+			    tags.push(res["_embedded"]["events"][i]["classifications"][0]["genre"]["name"]); 
+			    tags.push(res["_embedded"]["events"][i]["classifications"][0]["subGenre"]["name"]);
+
+			    event.tags = tags; 
 			    formattedEvents.push(event);
 			}
 			catch(err){
