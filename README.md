@@ -10,3 +10,6 @@ To run locally:
 
 To run mocha/chai tests (once they're ready):
 1. run `./node_modules/mocha/bin/mocha`
+
+To see current version running on heroku: 
+https://event-queue-service.herokuapp.com/grab_events/40/-74/1000km
