@@ -14,12 +14,11 @@ var eventbrite = new SourceConstructor({
 	    formatEvents: function(res) {
 	    	var formattedEvents = [];
 	    	var responseSize = Object.keys(res["events"]).length;
+
 	    	//temporarily only loading 5 events 
 	    	for(var i = 0; i<5; i++) {
-		    	// Catch any error caused by their API. 
-		    	// For example, an event does not any required field
-		    	try{
-			    	var event = {
+
+		    		var event = {
 				    	eventName: res["events"][i]["name"]["text"],
 					    startTime: res["events"][i]["start"]["local"],
 					    endTime: res["events"][i]["end"]["local"],
@@ -30,6 +29,18 @@ var eventbrite = new SourceConstructor({
 					    imageUrl: res["events"][i]["logo"]["original"]["url"],
 					    latitude: res["events"][i]["venue"]["address"]["latitude"],
 					    longitude: res["events"][i]["venue"]["address"]["longitude"]
+			    	}
+
+				    // check if any fields we try to retrieve from data are invalid
+			    	for (const [key, value] of Object.entries(event)){
+			    		try {
+				    		if (typeof(value) == undefined){ // as opposed to null when the field is valid but has no info
+				    			throw "The source field involving " + key + "is invalid";
+				    		}
+				    	}
+				    	catch{
+				    		return [];
+				    	}
 			    	}
 
 			    	var tags = []; 
@@ -68,17 +79,11 @@ var eventbrite = new SourceConstructor({
 			    	event.tags = tags; 
 
 
-
 			    	console.log(event.description)
 			    	console.log(tags)
 			    	console.log("**********************************")
 
-			      	// formattedEvents.push(new EventObject(event)); 
 			      	formattedEvents.push(event);
-		    	}
-		    	catch(err){
-		    		console.log("An event from eventbrite does not have all required fields.\n"+err.message);
-		    	}
 
     		}
     		return formattedEvents;
