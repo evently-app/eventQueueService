@@ -1,5 +1,5 @@
 var sourceConstructor = require('../classes/sourceconstructor');
-var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster')]
+var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster'), require('../sources/meetup')]
 var utils = require('../utils.js');
 var sort = require('./sort.js');
 var express = require('express')

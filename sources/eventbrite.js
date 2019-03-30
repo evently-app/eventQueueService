@@ -16,18 +16,25 @@ var eventbrite = new SourceConstructor({
 	    	var responseSize = Object.keys(res["events"]).length;
 
 	    	//temporarily only loading 5 events 
-	    	for(var i = 0; i<5; i++) {
-	    		var event = {
-			    	eventName: res["events"][i]["name"]["text"],
-				    startTime: res["events"][i]["start"]["local"],
-				    endTime: res["events"][i]["end"]["local"],
-				    description: res["events"][i]["summary"],
-				    ticketUrl: res["events"][i]["url"],
-				    id: res["events"][i]["id"],
-				    tags: ["eventbrite"],
-				    imageUrl: res["events"][i]["logo"]["original"]["url"],
-				    latitude: res["events"][i]["venue"]["address"]["latitude"],
-				    longitude: res["events"][i]["venue"]["address"]["longitude"]
+        
+	    	for(var i = 0; i<responseSize; i++) {
+		    	// Catch any error caused by their API. 
+		    	// For example, an event does not any required field
+		    	try{
+			    	var event = {
+				    	eventName: res["events"][i]["name"]["text"],
+					    startTime: res["events"][i]["start"]["local"],
+					    endTime: res["events"][i]["end"]["local"],
+					    description: res["events"][i]["description"]["text"],
+					    ticketUrl: res["events"][i]["url"],
+					    id: res["events"][i]["id"],
+					    tags: ["eventbrite"],
+					    imageUrl: res["events"][i]["logo"]["original"]["url"],
+					    latitude: res["events"][i]["venue"]["address"]["latitude"],
+					    longitude: res["events"][i]["venue"]["address"]["longitude"]
+			    	}
+
+			    	var tags = []; 
 		    	}
 
 			    // check if any fields we try to retrieve from data are invalid
@@ -41,6 +48,7 @@ var eventbrite = new SourceConstructor({
 			    		return [];
 			    	}
 		    	}
+
 
 		    	var tags = []; 
 
@@ -78,11 +86,7 @@ var eventbrite = new SourceConstructor({
 		    	event.tags = tags; 
 
 
-		    	console.log(event.description)
-		    	console.log(tags)
-		    	console.log("**********************************")
-
-		      	formattedEvents.push(event);
+		      formattedEvents.push(event);
 
     		}
     		return formattedEvents;
@@ -104,9 +108,6 @@ eventbrite.getRequestUrl = function(req){
 		return requestURL;
 }
 
-eventbrite.makeTag = function(req) { 
-	console.log(HAHAHHA)
-}
 
 module.exports = eventbrite;
 

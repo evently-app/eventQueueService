@@ -14,7 +14,7 @@ var ticketmaster = new SourceConstructor({
     	var formattedEvents = []
     	var responseSize = Object.keys(res["_embedded"]["events"]).length;
     	//temporarily only loading 5 events 
-    	for(var i = 0; i<7; i++){
+    	for(var i = 0; i<responseSize; i++){
 
     		try{
     			var locationInfo = {};
@@ -36,6 +36,8 @@ var ticketmaster = new SourceConstructor({
 				    latitude: locationInfo.latitude,
 				    longitude: locationInfo.longitude
 			    }
+
+			    event.tags = tags; 
 
 			    var tags = []; 
 			    tags.push(res["_embedded"]["events"][i]["classifications"][0]["segment"]["name"]);
