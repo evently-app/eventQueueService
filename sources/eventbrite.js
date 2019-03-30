@@ -15,7 +15,7 @@ var eventbrite = new SourceConstructor({
 	    	var formattedEvents = [];
 	    	var responseSize = Object.keys(res["events"]).length;
 	    	//temporarily only loading 5 events 
-	    	for(var i = 0; i<5; i++) {
+	    	for(var i = 0; i<responseSize; i++) {
 		    	// Catch any error caused by their API. 
 		    	// For example, an event does not any required field
 		    	try{
@@ -67,12 +67,6 @@ var eventbrite = new SourceConstructor({
 
 			    	event.tags = tags; 
 
-
-
-			    	console.log(event.description)
-			    	console.log(tags)
-			    	console.log("**********************************")
-
 			      	// formattedEvents.push(new EventObject(event)); 
 			      	formattedEvents.push(event);
 		    	}
@@ -100,9 +94,6 @@ eventbrite.getRequestUrl = function(req){
 		return requestURL;
 }
 
-eventbrite.makeTag = function(req) { 
-	console.log(HAHAHHA)
-}
 
 module.exports = eventbrite;
 
