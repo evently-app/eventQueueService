@@ -35,7 +35,44 @@ var eventbrite = new SourceConstructor({
 			    	}
 
 			    	var tags = []; 
-		    	}
+
+			    	if(event.description.toLowerCase().includes("free")){
+			    		tags.push("Free"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("party")){
+			    		tags.push("Party"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("show") || event.description.toLowerCase().includes("perform")){
+			    		tags.push("Performance"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("music") || event.description.toLowerCase().includes("dj") || event.description.toLowerCase().includes("hip hop")){
+			    		tags.push("Music"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("bar") || event.description.toLowerCase().includes("lounge")){
+			    		tags.push("Bar/Lounge"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("kids") || event.description.toLowerCase().includes("family")){
+			    		tags.push("Family Friendly"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("expo") || event.description.toLowerCase().includes("conference")){
+			    		tags.push("Conference"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("art") || event.description.toLowerCase().includes("culture")){
+			    		tags.push("Art/Culture"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("festival") || event.description.toLowerCase().includes("fair")){
+			    		tags.push("Festival"); 
+			    	}
+			    	if(event.description.toLowerCase().includes("education") || event.description.toLowerCase().includes("seminar") || event.description.toLowerCase().includes("professor")){
+			    		tags.push("Educational"); 
+			    	}
+
+			    	event.tags = tags; 
+			    	}
+
+			    	catch(err){
+		    		console.log("An event from eventbrite does not have all required fields.\n"+err.message);
+		    		}	
 
 			    // check if any fields we try to retrieve from data are invalid
 		    	for (const [key, value] of Object.entries(event)){
@@ -48,42 +85,6 @@ var eventbrite = new SourceConstructor({
 			    		return [];
 			    	}
 		    	}
-
-
-		    	var tags = []; 
-
-		    	if(event.description.toLowerCase().includes("free")){
-		    		tags.push("Free"); 
-		    	}
-		    	if(event.description.toLowerCase().includes("party")){
-		    		tags.push("Party"); 
-		    	}
-		    	if(event.description.toLowerCase().includes("show") || event.description.toLowerCase().includes("perform")){
-		    		tags.push("Performance"); 
-		    	}
-		    	if(event.description.toLowerCase().includes("music") || event.description.toLowerCase().includes("dj") || event.description.toLowerCase().includes("hip hop")){
-		    		tags.push("Music"); 
-		    	}
-		    	if(event.description.toLowerCase().includes("bar") || event.description.toLowerCase().includes("lounge")){
-		    		tags.push("Bar/Lounge"); 
-		    	}
-		    	if(event.description.toLowerCase().includes("kids") || event.description.toLowerCase().includes("family")){
-		    		tags.push("Family Friendly"); 
-		    	}
-		    	if(event.description.toLowerCase().includes("expo") || event.description.toLowerCase().includes("conference")){
-		    		tags.push("Conference"); 
-		    	}
-		    	if(event.description.toLowerCase().includes("art") || event.description.toLowerCase().includes("culture")){
-		    		tags.push("Art/Culture"); 
-		    	}
-		    	if(event.description.toLowerCase().includes("festival") || event.description.toLowerCase().includes("fair")){
-		    		tags.push("Festival"); 
-		    	}
-		    	if(event.description.toLowerCase().includes("education") || event.description.toLowerCase().includes("seminar") || event.description.toLowerCase().includes("professor")){
-		    		tags.push("Educational"); 
-		    	}
-
-		    	event.tags = tags; 
 
 
 		      formattedEvents.push(event);
