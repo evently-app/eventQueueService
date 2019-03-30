@@ -37,6 +37,8 @@ var ticketmaster = new SourceConstructor({
 				    longitude: locationInfo.longitude
 			    }
 
+			    event.tags = tags; 
+
 			    var tags = []; 
 			    tags.push(res["_embedded"]["events"][i]["classifications"][0]["segment"]["name"]);
 			    tags.push(res["_embedded"]["events"][i]["classifications"][0]["genre"]["name"]); 

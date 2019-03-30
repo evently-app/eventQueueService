@@ -23,7 +23,7 @@ var eventbrite = new SourceConstructor({
 				    	eventName: res["events"][i]["name"]["text"],
 					    startTime: res["events"][i]["start"]["local"],
 					    endTime: res["events"][i]["end"]["local"],
-					    description: res["events"][i]["summary"],
+					    description: res["events"][i]["description"]["text"],
 					    ticketUrl: res["events"][i]["url"],
 					    id: res["events"][i]["id"],
 					    tags: ["eventbrite"],
@@ -64,8 +64,6 @@ var eventbrite = new SourceConstructor({
 			    	if(event.description.toLowerCase().includes("education") || event.description.toLowerCase().includes("seminar") || event.description.toLowerCase().includes("professor")){
 			    		tags.push("Educational"); 
 			    	}
-
-			    	event.tags = tags; 
 
 			      	// formattedEvents.push(new EventObject(event)); 
 			      	formattedEvents.push(event);
