@@ -28,7 +28,7 @@ var eventbrite = new SourceConstructor({
 
 		    	// check if any fields we try to retrieve from data are invalid
 		    	for (const [key, value] of Object.entries(event)){
-		    		if (value == undefined){ // as opposed to null when the field is valid but has no info
+		    		if (typeof(value) == undefined){ // as opposed to null when the field is valid but has no info
 		    			throw "The source field involving " + key + "is invalid";
 		    		}
 		    	}
