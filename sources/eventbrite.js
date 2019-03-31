@@ -17,7 +17,7 @@ var eventbrite = new SourceConstructor({
 
 	    	//temporarily only loading 5 events 
         
-	    	for(var i = 0; i<responseSize; i++) {
+	    	for(var i = 0; i<5; i++) {
 		    	// Catch any error caused by their API. 
 		    	// For example, an event does not any required field
 		    	try{

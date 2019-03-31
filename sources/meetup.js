@@ -13,7 +13,7 @@ var meetup = new SourceConstructor({
 	    formatEvents: function(res) {
 	    	var formattedEvents = [];
 	    	var responseSize = Object.keys(res["events"]).length;
-	    	for(var i = 0; i<responseSize; i++) {
+	    	for(var i = 0; i<5; i++) {
 		    	// Catch any error caused by their API. 
 		    	// For example, an event does not any required field
 		    	try{
@@ -76,9 +76,11 @@ meetup.grab = async function(req, res) {
 	    json: true 
 	};
 
+	console.log(requestURL);
+
 	return rp(options)
 	    .then(function (data) {
-	        return data
+	        return data;
 	    })
 	    .catch(function (err) {
 		    res.send({"error!":err.statusCode + err.body});
