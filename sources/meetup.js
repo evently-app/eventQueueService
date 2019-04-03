@@ -27,7 +27,8 @@ var meetup = new SourceConstructor({
 					    //create stock photo for image based on the event tag 
 					    imageUrl: null,
 					    latitude: res["events"][i]["group"]["lat"],
-					    longitude: res["events"][i]["group"]["lon"]
+					    longitude: res["events"][i]["group"]["lon"],
+					    source: "meetup"
 			    	}
 
 			    	var tags = []; 

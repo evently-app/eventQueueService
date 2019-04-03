@@ -31,7 +31,8 @@ var eventbrite = new SourceConstructor({
 					    tags: ["eventbrite"],
 					    imageUrl: res["events"][i]["logo"]["original"]["url"],
 					    latitude: res["events"][i]["venue"]["address"]["latitude"],
-					    longitude: res["events"][i]["venue"]["address"]["longitude"]
+					    longitude: res["events"][i]["venue"]["address"]["longitude"],
+					    source:"eventbrite"
 			    	}
 
 			    	var tags = []; 

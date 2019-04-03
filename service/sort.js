@@ -37,13 +37,19 @@ var sort =  {
 		if (!userData){
 			return scoredEvents
 		}
-		scoredEvents = this.addDistanceScore(events,
-						userData.latitude,
-						userData.longitude);
-		
-		scoredEvents = this.addPreferenceScore(scoredEvents,
-						userData.userPreferences);
+		var scoredEvents = events
 
+		if(userData.hasOwnProperty('latitude') && 
+			userData.hasOwnProperty('longitude')){
+			
+			scoredEvents = this.addDistanceScore(events,
+							userData.latitude,
+							userData.longitude);
+		}
+		if (userData.hasOwnProperty('userPreferences')){
+			scoredEvents = this.addPreferenceScore(scoredEvents,
+							userData.userPreferences);
+		}
 
 		// get users' coordinates from firestore
 		/*

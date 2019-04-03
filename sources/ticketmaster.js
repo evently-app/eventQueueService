@@ -34,7 +34,8 @@ var ticketmaster = new SourceConstructor({
 				    tags: ["ticketmaster"],
 				    imageUrl: res["_embedded"]["events"][i]["images"][0]["url"],
 				    latitude: locationInfo.latitude,
-				    longitude: locationInfo.longitude
+				    longitude: locationInfo.longitude,
+				    source: "ticketmaster"
 			    }
 
 			    event.tags = tags; 
