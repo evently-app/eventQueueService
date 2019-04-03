@@ -64,7 +64,7 @@ var events = {
         //save events to db
         for (var j = 0; j < formattedEvents[i].length; j++) {
           //db id is apiName + api's eventId
-          var eventId = sourceObjects[i].apiName + formattedEvents[i][j].id
+          var eventId = formattedEvents[i][j].id
           var eventRef = db.collection('events').doc(eventId)
           eventRef.set(formattedEvents[i][j]) //async set, no await
         }
