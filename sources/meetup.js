@@ -17,10 +17,13 @@ var meetup = new SourceConstructor({
 		    	// Catch any error caused by their API. 
 		    	// For example, an event does not any required field
 		    	try{
+
+
+
 			    	var event = {
 				    	eventName: res["events"][i]["name"],
 				    	//we will need to convert it 
-					    startTime: res["events"][i]["local_time"],
+					    startTime: res["events"][i]["local_date"] + "T" + res["events"][i]["local_time"],
 					    description: res["events"][i]["description"] || null,
 					    ticketUrl: res["events"][i]["link"],
 					    id: res["events"][i]["id"],
