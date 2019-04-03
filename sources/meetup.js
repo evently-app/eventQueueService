@@ -9,7 +9,7 @@ var meetup = new SourceConstructor({
 	    	"latitude": "lat",
 	    	"longitude": "lon",
 	    }, 
-	    apiName: 'Meetup',
+	    apiName: 'Meetup', //if edit, edit event's source and id. 
 	    formatEvents: function(res) {
 	    	var formattedEvents = [];
 	    	var responseSize = Object.keys(res["events"]).length;
@@ -23,11 +23,13 @@ var meetup = new SourceConstructor({
 					    startTime: moment(res["events"][i]["local_date"] + " " + res["events"][i]["local_time"]).format(),
 					    description: res["events"][i]["description"] || null,
 					    ticketUrl: res["events"][i]["link"],
-					    id: res["events"][i]["id"],
+					    sourceId: res["events"][i]["id"],
 					    //create stock photo for image based on the event tag 
 					    imageUrl: null,
 					    latitude: res["events"][i]["group"]["lat"],
-					    longitude: res["events"][i]["group"]["lon"]
+						longitude: res["events"][i]["group"]["lon"],
+						source:'Meetup', //has to be same as super's apiName
+						id: 'Meetup' + res["events"][i]["id"] //has to be same as this.source + this.sourceId
 					}
 					if(!event.startTime || event.startTime === 'Invalid date') {
 						console.log(res["events"][i]["local_time"])

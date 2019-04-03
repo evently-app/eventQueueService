@@ -11,7 +11,7 @@ var eventbrite = new SourceConstructor({
 	    	"radius": "location.within",
 	    	"venue": "expand"
 	    }, 
-	    apiName: 'Eventbrite',
+	    apiName: 'Eventbrite', //if edit, edit event's source and id. 
 	    formatEvents: function(res) {
 	    	var formattedEvents = [];
 	    	var responseSize = Object.keys(res["events"]).length;
@@ -28,11 +28,13 @@ var eventbrite = new SourceConstructor({
 					    endTime: res["events"][i]["end"]["local"],
 					    description: res["events"][i]["description"]["text"],
 					    ticketUrl: res["events"][i]["url"],
-					    id: res["events"][i]["id"],
+					    sourceId: res["events"][i]["id"],
 					    tags: ["eventbrite"],
 					    imageUrl: res["events"][i]["logo"]["original"]["url"],
 					    latitude: res["events"][i]["venue"]["address"]["latitude"],
-					    longitude: res["events"][i]["venue"]["address"]["longitude"]
+						longitude: res["events"][i]["venue"]["address"]["longitude"],
+						source:'Eventbrite', //has to be same as super's apiName
+						id: 'Eventbrite' + res["events"][i]["id"] //has to be same as this.source + this.sourceId
 					}
 
 					var tags = [];

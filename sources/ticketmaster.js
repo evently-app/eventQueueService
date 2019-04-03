@@ -31,11 +31,13 @@ var ticketmaster = new SourceConstructor({
 			    	startTime: moment(res["_embedded"]["events"][i]["dates"]["start"]["dateTime"]).format(),
 				    endTime: null,
 				    ticketUrl: res["_embedded"]["events"][i]["url"],
-				    id: res["_embedded"]["events"][i]["id"],
+				    sourceId: res["_embedded"]["events"][i]["id"],
 				    tags: ["ticketmaster"],
 				    imageUrl: res["_embedded"]["events"][i]["images"][0]["url"],
 				    latitude: locationInfo.latitude,
-				    longitude: locationInfo.longitude
+						longitude: locationInfo.longitude,
+						source:'Ticketmaster', //has to be same as super's apiName
+						id: 'Ticketmaster' + res["_embedded"]["events"][i]["id"] //has to be same as this.source + this.sourceId
 					}
 					
 					if(!event.startTime || event.startTime === 'Invalid date') {
