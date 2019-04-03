@@ -37,8 +37,6 @@ var sort =  {
 		if (!userData){
 			return scoredEvents
 		}
-		console.log("check if get user preference")
-		console.log(userData.userPreferences)
 		scoredEvents = this.addDistanceScore(events,
 						userData.latitude,
 						userData.longitude);
@@ -68,7 +66,6 @@ var sort =  {
 		    	userScore.push(userPreferences[key])
 		    }
 		}
-		console.log(userScore)
 		for (var i = 0; i < events.length; i++) {
 			var event = events[i]
 			// Uncomment the following line when events do have this field

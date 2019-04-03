@@ -32,6 +32,7 @@ function sortAndSend(events, res, userData) {
   res.send(sortedEvents);
 }
 
+
 // /Function that returns a new array, of all the elems from arr,
 // other than those whose ids are in toRemove.
 function filterSeenEvents(arr, toRemove) {
@@ -86,7 +87,7 @@ var events = {
             var userData = doc.data();
             userData.longitude = req.params.longitude;
             userData.latitude = req.params.latitude;
-            filteredResultObject = filterSeenEvents(resultObject, doc.data().events)
+            filteredResultObject = filterSeenEvents(resultObject, doc.data().swipedEvents)
             sortAndSend(filteredResultObject, res, userData);
           }
         })
