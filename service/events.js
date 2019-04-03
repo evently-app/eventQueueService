@@ -79,7 +79,7 @@ var events = {
       var getDoc = userRef.get()
         .then(doc => {
           if (!doc.exists) {
-            var userData = {'longitude':req.params.longitude,'latitude':req.params.latitude};
+            var userData = {'userPreferences':doc.data().userPreferences,'longitude':req.params.longitude,'latitude':req.params.latitude};
             console.log('User Not Found');
             sortAndSend(resultObject, res, userData);
           } else {
