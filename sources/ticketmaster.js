@@ -1,6 +1,7 @@
 const Geohash = require( '@parellin/geohash' );
 var zipcodes = require('zipcodes');
 var request = require('request');
+var moment = require('moment')
 var SourceConstructor = require('../classes/sourceconstructor');
 
 var ticketmaster = new SourceConstructor({
@@ -27,7 +28,7 @@ var ticketmaster = new SourceConstructor({
 
 			    var event = {
 			    	eventName: res["_embedded"]["events"][i]["name"],
-			    	startTime: res["_embedded"]["events"][i]["dates"]["start"]["dateTime"],
+			    	startTime: moment(res["_embedded"]["events"][i]["dates"]["start"]["dateTime"]).format(),
 				    endTime: null,
 				    ticketUrl: res["_embedded"]["events"][i]["url"],
 				    id: res["_embedded"]["events"][i]["id"],
@@ -35,7 +36,12 @@ var ticketmaster = new SourceConstructor({
 				    imageUrl: res["_embedded"]["events"][i]["images"][0]["url"],
 				    latitude: locationInfo.latitude,
 				    longitude: locationInfo.longitude
-			    }
+					}
+					
+					if(!event.startTime || event.startTime === 'Invalid date') {
+						console.log('Ticketmaster Object\'s date could not be converted to moment format')
+						continue;
+					}
 
 			    event.tags = tags; 
 
@@ -46,12 +52,13 @@ var ticketmaster = new SourceConstructor({
 
 			    event.tags = tags; 
 			    formattedEvents.push(event);
-			}
-			catch(err){
+				}
+				catch(err){
 	    		console.log("An event from ticketmaster does not have all required fields.\n"+err.message);
+				}
 			}
-		}
-		return formattedEvents;
+			console.log("Ticketmaster returned and array of size: " + formattedEvents.length)
+			return formattedEvents;
     }
   });
 

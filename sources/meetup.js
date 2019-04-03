@@ -1,6 +1,6 @@
 var SourceConstructor = require('../classes/sourceconstructor');
 var rp = require('request-promise');
-
+var moment = require('moment')
 var meetup = new SourceConstructor({
 		url : "https://api.meetup.com/find/upcoming_events?&sign=true&photo-host=public&", 
 		apiTerm: "access_token", 
@@ -9,7 +9,7 @@ var meetup = new SourceConstructor({
 	    	"latitude": "lat",
 	    	"longitude": "lon",
 	    }, 
-	    apiName: 'Eventbrite',
+	    apiName: 'Meetup',
 	    formatEvents: function(res) {
 	    	var formattedEvents = [];
 	    	var responseSize = Object.keys(res["events"]).length;
@@ -20,7 +20,7 @@ var meetup = new SourceConstructor({
 			    	var event = {
 				    	eventName: res["events"][i]["name"],
 				    	//we will need to convert it 
-					    startTime: res["events"][i]["local_time"],
+					    startTime: moment(res["events"][i]["local_date"] + " " + res["events"][i]["local_time"]).format(),
 					    description: res["events"][i]["description"] || null,
 					    ticketUrl: res["events"][i]["link"],
 					    id: res["events"][i]["id"],
@@ -28,7 +28,12 @@ var meetup = new SourceConstructor({
 					    imageUrl: null,
 					    latitude: res["events"][i]["group"]["lat"],
 					    longitude: res["events"][i]["group"]["lon"]
-			    	}
+					}
+					if(!event.startTime || event.startTime === 'Invalid date') {
+						console.log(res["events"][i]["local_time"])
+						console.log('Meetup Object\'s date could not be converted to moment format')
+						continue;
+					}
 
 			    	var tags = []; 
 
@@ -38,7 +43,8 @@ var meetup = new SourceConstructor({
 		    		console.log("An event from meetup does not have all required fields.\n"+err.message);
 		    	}
 
-    		}
+			}
+			console.log("Meetup returned and array of size: " + formattedEvents.length)
     		return formattedEvents;
 	    }
     });
@@ -64,8 +70,8 @@ meetup.getRequestUrl = async function(req){
 		var refreshResponse = await rp.post(options); 
 		var access_token = refreshResponse.access_token
 
-		requestURL += "page=20000&";
-        requestURL += this.apiTerm + "=" + access_token;
+		requestURL += "page=200&";
+		requestURL += this.apiTerm + "=" + access_token;
         return requestURL;
 }
 
@@ -75,8 +81,6 @@ meetup.grab = async function(req, res) {
 	    uri: requestURL,
 	    json: true 
 	};
-
-	console.log(requestURL);
 
 	return rp(options)
 	    .then(function (data) {

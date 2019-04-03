@@ -1,4 +1,5 @@
 var SourceConstructor = require('../classes/sourceconstructor');
+var moment = require('moment')
 
 var eventbrite = new SourceConstructor({
 		url : "https://www.eventbriteapi.com/v3/events/search/?", 
@@ -16,14 +17,14 @@ var eventbrite = new SourceConstructor({
 	    	var responseSize = Object.keys(res["events"]).length;
 
 	    	//temporarily only loading 5 events 
-        
+				
 	    	for(var i = 0; i<5; i++) {
 		    	// Catch any error caused by their API. 
 		    	// For example, an event does not any required field
 		    	try{
 			    	var event = {
 				    	eventName: res["events"][i]["name"]["text"],
-					    startTime: res["events"][i]["start"]["local"],
+					    startTime: moment(res["events"][i]["start"]["local"]).format(),
 					    endTime: res["events"][i]["end"]["local"],
 					    description: res["events"][i]["description"]["text"],
 					    ticketUrl: res["events"][i]["url"],
@@ -32,9 +33,14 @@ var eventbrite = new SourceConstructor({
 					    imageUrl: res["events"][i]["logo"]["original"]["url"],
 					    latitude: res["events"][i]["venue"]["address"]["latitude"],
 					    longitude: res["events"][i]["venue"]["address"]["longitude"]
-			    	}
+					}
 
-			    	var tags = []; 
+					var tags = [];
+					
+					if(!event.startTime || event.startTime === 'Invalid date') {
+						console.log('Eventbrite Object\'s date could not be converted to moment format')
+						continue;
+					}
 
 			    	if(event.description.toLowerCase().includes("free")){
 			    		tags.push("Free"); 
@@ -68,11 +74,12 @@ var eventbrite = new SourceConstructor({
 			    	}
 
 			    	event.tags = tags; 
-			    	}
-
-			    	catch(err){
+			    }
+			    catch(err){
 		    		console.log("An event from eventbrite does not have all required fields.\n"+err.message);
-		    		}	
+				}	
+				
+				var isValid = true;
 
 			    // check if any fields we try to retrieve from data are invalid
 		    	for (const [key, value] of Object.entries(event)){
@@ -82,14 +89,16 @@ var eventbrite = new SourceConstructor({
 			    		}
 			    	}
 			    	catch{
-			    		return [];
+						isValid = false;
 			    	}
 		    	}
 
+				if (isValid) {
+					formattedEvents.push(event);
+				}
 
-		      formattedEvents.push(event);
-
-    		}
+			}
+			console.log("Eventbrite returned and array of size: " + formattedEvents.length)
     		return formattedEvents;
 	    }
     });
