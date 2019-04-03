@@ -94,4 +94,3 @@ meetup.grab = async function(req, res) {
 }
 
 module.exports = meetup;
-

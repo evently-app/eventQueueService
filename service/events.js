@@ -28,15 +28,52 @@ function cache(id, event){
 
 //Wrapper function which sorts the array and then sends it.
 function sortAndSend(events, res, userData) {
-  sortedEvents = sort.sort(events,userData);
-  res.send(sortedEvents);
+  sortedEvents = sort.sort(events,userData)
+  addToQueue(sortedEvents,userData.id)
+  res.send(sortedEvents)
+}
+
+
+// add ids of the events to user as a subcollection in firebase
+function addToQueue(events,user){
+  sortedIds = []
+  for (var i = 0; i < events.length; i++) {
+    sortedIds.push(events[i].source+events[i].id)
+  }
+
+  var queueRef = db.collection('users').doc(user)
+  console.log("retrieve from firebase")
+  // queueRef.
+  var getDoc = queueRef.get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.log("user not exists")
+      } else {
+        //concatenate existing queue to new event ids.
+        var updateIds = doc.data().queue.concat(sortedIds)
+        console.log("adding "+sortedIds.length+" events to the queue")
+        queueRef.update(
+          {
+            "queue" : updateIds
+          }
+        )
+      }
+    })
+    .catch(err => {
+      console.log('Error getting document', err);
+    });
+
+
 }
 
 
 // /Function that returns a new array, of all the elems from arr,
 // other than those whose ids are in toRemove.
 function filterSeenEvents(arr, toRemove) {
+
   var toReturn = [];
+  if (toRemove == undefined)
+    return toReturn
   for (var i = 0; i < arr.length; i++) {
     var elem = arr[i];
     if (!toRemove.includes(elem.id)) {
@@ -80,11 +117,12 @@ var events = {
       var getDoc = userRef.get()
         .then(doc => {
           if (!doc.exists) {
-            var userData = {'userPreferences':doc.data().userPreferences,'longitude':req.params.longitude,'latitude':req.params.latitude};
+            var userData = {'longitude':req.params.longitude,'latitude':req.params.latitude};
             console.log('User Not Found');
             sortAndSend(resultObject, res, userData);
           } else {
             var userData = doc.data();
+            userData.id = user;
             userData.longitude = req.params.longitude;
             userData.latitude = req.params.latitude;
             filteredResultObject = filterSeenEvents(resultObject, doc.data().swipedEvents)
@@ -96,8 +134,6 @@ var events = {
           sortAndSend(resultObject, res);
         });
       
-
-
     }
 };
 

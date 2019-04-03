@@ -122,4 +122,3 @@ eventbrite.getRequestUrl = function(req){
 
 
 module.exports = eventbrite;
-
