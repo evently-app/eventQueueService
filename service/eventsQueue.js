@@ -93,7 +93,7 @@ var eventsQueue = {
 						})
 
 						batch.commit().then(() => {
-							console.log("done")
+							console.log("done for user:", data.userid)
 							res.sendStatus(200)
 						})
 					})
