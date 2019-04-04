@@ -45,6 +45,7 @@ var eventsQueue = {
 				    console.log("Error getting document:", error)
 				})
 		}
+		var scoredEvents = sort.addScore(eventData,data)
 
 		const batch = db.batch()
 		for (var i = 0; i < eventData.length; i++){

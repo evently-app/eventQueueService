@@ -39,13 +39,12 @@ var sort =  {
 		}
 		var scoredEvents = events
 
-		if(userData.hasOwnProperty('latitude') && 
-			userData.hasOwnProperty('longitude')){
-			
+		if(userData.hasOwnProperty('coordinates')){
 			scoredEvents = this.addDistanceScore(events,
-							userData.latitude,
-							userData.longitude);
+							userData.coordinates.latitude,
+							userData.coordinates.longitude)
 		}
+
 		if (userData.hasOwnProperty('userPreferences')){
 			scoredEvents = this.addPreferenceScore(scoredEvents,
 							userData.userPreferences);
