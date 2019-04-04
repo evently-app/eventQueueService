@@ -91,6 +91,7 @@ var sort =  {
 			}
 			similarityScore = utils.similarity(userScore,eventScore)
 			event['preferenceScore'] = similarityScore;
+			event['score']+=2*similarityScore;
 		}
 
 		return events;
@@ -139,6 +140,7 @@ var sort =  {
 			var distanceScore = utils.scaleDown(
 				event['distance'], minDistance, maxDistance, 1, 0);
 			// console.log(timeScore);
+			event['distanceScore'] = distanceScore
 			event['score'] += distanceScore;
 		}
 		return events;
