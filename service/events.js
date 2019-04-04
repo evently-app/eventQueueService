@@ -27,10 +27,9 @@ function cache(id, event){
 }
 
 //Wrapper function which sorts the array and then sends it.
-function sortAndSend(events, res, userData) {
-  sortedEvents = sort.sort(events,userData)
-  addToQueue(sortedEvents,userData.id)
-  res.send(sortedEvents)
+function scoreEvent(events, userData) {
+  scoredEvents = sort.addScore(events,userData)
+  return scoredEvents
 }
 
 
@@ -38,30 +37,30 @@ function sortAndSend(events, res, userData) {
 function addToQueue(events,user){
   sortedIds = []
   for (var i = 0; i < events.length; i++) {
-    sortedIds.push(events[i].source+events[i].id)
+    var queueRef = db.collection('users').doc(user).collection('eventQueue').doc(events[i].source+events[i].id)
+    queueRef.set(events[i])
   }
 
-  var queueRef = db.collection('users').doc(user)
-  console.log("retrieve from firebase")
-  // queueRef.
-  var getDoc = queueRef.get()
-    .then(doc => {
-      if (!doc.exists) {
-        console.log("user not exists")
-      } else {
-        //concatenate existing queue to new event ids.
-        var updateIds = doc.data().queue.concat(sortedIds)
-        console.log("adding "+sortedIds.length+" events to the queue")
-        queueRef.update(
-          {
-            "queue" : updateIds
-          }
-        )
-      }
-    })
-    .catch(err => {
-      console.log('Error getting document', err);
-    });
+
+  // console.log("retrieve from firebase")
+  // var getDoc = queueRef.get()
+  //   .then(doc => {
+  //     if (!doc.exists) {
+  //       console.log("user not exists")
+  //     } else {
+  //       //concatenate existing queue to new event ids.
+  //       var updateIds = doc.data().queue.concat(sortedIds)
+  //       console.log("adding "+sortedIds.length+" events to the queue")
+  //       queueRef.update(
+  //         {
+  //           "queue" : updateIds
+  //         }
+  //       )
+  //     }
+  //   })
+  //   .catch(err => {
+  //     console.log('Error getting document', err);
+  //   });
 
 
 }
@@ -119,19 +118,18 @@ var events = {
           if (!doc.exists) {
             var userData = {'longitude':req.params.longitude,'latitude':req.params.latitude};
             console.log('User Not Found');
-            sortAndSend(resultObject, res, userData);
+            res.send(scoreEvent(resultObject, userData));
           } else {
             var userData = doc.data();
             userData.id = user;
             userData.longitude = req.params.longitude;
             userData.latitude = req.params.latitude;
             filteredResultObject = filterSeenEvents(resultObject, doc.data().swipedEvents)
-            sortAndSend(filteredResultObject, res, userData);
+            res.send(scoreEvent(filteredResultObject, userData));
           }
         })
         .catch(err => {
           console.log('Error getting document', err);
-          sortAndSend(resultObject, res);
         });
       
     }
