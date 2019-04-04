@@ -18,13 +18,6 @@ var eventsQueue = {
 			        "latitude": "41.310726",
 			        "longitude": "-72.929916"
 			    },
-			    "userPreferences": {
-			        "lit": 0.3,
-			        "Active": 0.5,
-			        "relaxing": 0.8,
-			        "outdoor": 0.6,
-			        "cultural": 0.9
-			    },
 			    "radius": "20",
 			    "eventType": "eventbrite/ticketmaster/...",
 			    "userid": "xxxxxxx"
@@ -34,22 +27,38 @@ var eventsQueue = {
 	   events based on user preference and event distance from user. At last, it uploads
 	   those scored event to eventQueue subcollection in firestore.
 	*/
-	ping: async function(data, res) {
+	ping: async function({ uid, coordinates, radius }, res) {
 		// var geoEventData = []
 		// var eventData = []
 
 		// temp mock preference
-		data.userPreferences = {
-			lit: 0.3,
-			Active: 0.5,
-			relaxing: 0.8,
-			outdoor: 0.6,
-			cultural: 0.9
+		// data.userPreferences = {
+		// 	lit: 0.3,
+		// 	Active: 0.5,
+		// 	relaxing: 0.8,
+		// 	outdoor: 0.6,
+		// 	cultural: 0.9
+		// }
+
+		const defaultPreferences = {
+			lit: 1.0,
+			Active: 1.0,
+			relaxing: 1.0,
+			outdoor: 1.0,
+			cultural: 1.0
+		}
+
+		const userRef = db.collection("users").doc(uid)
+		const user = await userRef.get()
+
+		const userPreferences = {
+			...defaultPreferences,
+			...user.preferences
 		}
 
 		const queue = db
 			.collection("users")
-			.doc(data.userid)
+			.doc(uid)
 			.collection("eventQueue")
 
 		// const eventsFromQueue = await queue.get()
@@ -58,12 +67,10 @@ var eventsQueue = {
 		const geoEventLocations = geofirestore.collection("eventsLocations")
 
 		// get nearby events
+		const { latitude, longitude } = coordinates
 		const query = geoEventLocations.near({
-			center: new admin.firestore.GeoPoint(
-				parseFloat(data.coordinates.latitude),
-				parseFloat(data.coordinates.longitude)
-			),
-			radius: parseFloat(data.radius)
+			center: new admin.firestore.GeoPoint(parseFloat(latitude), parseFloat(longitude)),
+			radius: parseFloat(radius)
 		})
 
 		// Get query (as Promise)
@@ -85,15 +92,15 @@ var eventsQueue = {
 							if (doc.exists) eventsData.push({ ...doc.data(), swiped: false })
 						})
 
-						const scoredEvents = sort.addScore(eventsData, data)
+						const scoredEvents = sort.addScore(eventsData, { userPreferences, coordinates })
 
-						const batch = db.batch()
+						let batch = db.batch()
 						scoredEvents.forEach(event => {
 							batch.set(queue.doc(event.id), event)
 						})
 
 						batch.commit().then(() => {
-							console.log("done for user:", data.userid)
+							console.log("done for user:", uid)
 							res.sendStatus(200)
 						})
 					})
