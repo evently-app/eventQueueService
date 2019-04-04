@@ -86,9 +86,10 @@ var eventsQueue = {
 		}
 
 		await batch.commit()
-			.then(function(){console.log("Done")})
-		
-		res.send(eventData.slice(0,19))
+			.then(function(){
+				console.log("Done")
+				res.sendStatus(200)
+			})
 	},
 }
 
