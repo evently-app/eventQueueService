@@ -53,7 +53,7 @@ var eventsQueue = {
 
 		const userPreferences = {
 			...defaultPreferences,
-			...user.preferences
+			...user.data().preferences
 		}
 
 		const queue = db
