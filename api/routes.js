@@ -7,4 +7,6 @@ module.exports = function(app) {
        .get(controller.about);
    app.route('/grab_events/:latitude/:longitude/:radius')
        .get(controller.grabEvents);
+    app.route('/scrape/')
+       .get(controller.scrape);
 };

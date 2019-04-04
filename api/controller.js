@@ -20,6 +20,10 @@ var controllers = {
                res.json(dist);
            });
     },
+    
+    scrape: function(req, res) {
+        events.scrape(req, res);
+    }
 };
 
 
