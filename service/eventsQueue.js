@@ -1,14 +1,14 @@
-var utils = require("../utils.js");
-var sort = require("./sort.js");
+var utils = require("../utils.js")
+var sort = require("./sort.js")
 
 //Firebase Initialization
-const admin = require("firebase-admin");
-const GeoFirestore = require("geofirestore");
+const admin = require("firebase-admin")
+const GeoFirestore = require("geofirestore")
 
-var db = admin.firestore();
+var db = admin.firestore()
 
 // Create a GeoFirestore reference
-const geofirestore = new GeoFirestore.GeoFirestore(db);
+const geofirestore = new GeoFirestore.GeoFirestore(db)
 
 var eventsQueue = {
 	/*Parameters:
@@ -45,17 +45,17 @@ var eventsQueue = {
 			relaxing: 0.8,
 			outdoor: 0.6,
 			cultural: 0.9
-		};
+		}
 
 		const queue = db
 			.collection("users")
 			.doc(data.userid)
-			.collection("eventQueue");
+			.collection("eventQueue")
 
 		// const eventsFromQueue = await queue.get()
 
 		// Create a GeoCollection reference
-		const geoEventLocations = geofirestore.collection("eventsLocations");
+		const geoEventLocations = geofirestore.collection("eventsLocations")
 
 		// get nearby events
 		const query = geoEventLocations.near({
@@ -64,43 +64,43 @@ var eventsQueue = {
 				parseFloat(data.coordinates.longitude)
 			),
 			radius: parseFloat(data.radius)
-		});
+		})
 
 		// Get query (as Promise)
 		// var geoEventData = await query.get()
-		let eventsData = [];
+		let eventsData = []
 
-		const eventsRef = db.collection("events");
+		const eventsRef = db.collection("events")
 		query
 			.get()
 			.then(snapshot => {
-				let promises = [];
+				let promises = []
 				snapshot.forEach(doc => {
-					promises.push(eventsRef.doc(doc.id).get());
-				});
+					promises.push(eventsRef.doc(doc.id).get())
+				})
 
 				Promise.all(promises)
 					.then(data => {
 						data.forEach(doc => {
-							if (doc.exists) eventsData.push({ ...doc.data(), swiped: false });
-						});
+							if (doc.exists) eventsData.push({ ...doc.data(), swiped: false })
+						})
 
-						const scoredEvents = sort.addScore(eventsData, data);
+						const scoredEvents = sort.addScore(eventsData, data)
 
-						const batch = db.batch();
+						const batch = db.batch()
 						scoredEvents.forEach(event => {
-							batch.set(queue.doc(event.id), event);
-						});
+							batch.set(queue.doc(event.id), event)
+						})
 
 						batch.commit().then(() => {
-							console.log("done");
-							res.sendStatus(200);
-						});
+							console.log("done")
+							res.sendStatus(200)
+						})
 					})
-					.catch(error => console.log("Error getting documents:", error));
+					.catch(error => console.log("Error getting documents:", error))
 			})
-			.catch(error => console.log("Error getting documents:", error));
+			.catch(error => console.log("Error getting documents:", error))
 	}
-};
+}
 
-module.exports = eventsQueue;
+module.exports = eventsQueue
