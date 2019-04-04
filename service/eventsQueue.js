@@ -4,27 +4,25 @@ var sort = require('./sort.js')
 //Firebase Initialization
 const admin = require('firebase-admin')
 const GeoFirestore = require('geofirestore')
-// admin.initializeApp({
-//   credential: admin.credential.cert({
-//     projectId: "evently-db",
-//     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-//     privateKey: process.env.FIREBASE_KEY.replace(/\\n/g, '\n')
-//   }),
-//   databaseURL: 'https://evently-db.firebaseio.com'
-// });
+
 var db = admin.firestore()
 
 // Create a GeoFirestore reference
 const geofirestore = new GeoFirestore.GeoFirestore(db)
 
-// Create a GeoCollection reference
-const geoEventLocations = geofirestore.collection('eventsLocations')
 
-var events = {
-	grab: async function(data,res){
+var eventsQueue = {
+	ping: async function(data,res){
 		var geoEventData = []
 		var eventData = []
 
+		const queue = db.collection('users').doc(data.userid).collection("eventQueue")
+		const eventsFromQueue = await queue.get()
+
+		// Create a GeoCollection reference
+		const geoEventLocations = geofirestore.collection('eventsLocations')
+
+		// get nearby events
 		const query = geoEventLocations.near({ center: new admin.firestore.GeoPoint(parseFloat(data.coordinates.latitude), 
 			parseFloat(data.coordinates.longitude)), radius: parseFloat(data.radius)})
 
@@ -48,15 +46,21 @@ var events = {
 				})
 		}
 
-		// filter out events by type
-		eventData = eventData.filter(function(value){
-			return value.tags.includes(data.eventType)
-		})
-	}
+		const batch = db.batch()
+		for (var i = 0; i < eventData.length; i++){
+			batch.set(queue.doc(eventData[i].id), eventData[i])
+		}
+
+		await batch.commit()
+			.then(function(){console.log("Done")})
+
+		res.send(eventData.slice(0,19))
+		// sortAndSend(eventData.slice(0,19), res, data)
+	},
 }
 
 
 
 
-module.exports = events;
+module.exports = eventsQueue;
 

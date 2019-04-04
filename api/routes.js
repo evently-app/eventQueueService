@@ -7,6 +7,6 @@ module.exports = function(app) {
 	   .get(controller.about);
 	app.route('/grab_events/:latitude/:longitude/:radius')
 	   .get(controller.grabEvents);
-	app.route('/grab_events')
-	   .post(controller.grabEventsPostReq);
+	app.route('/ping_events_queue')
+	   .post(controller.pingEventsQueue);
 };

@@ -3,7 +3,7 @@
 var properties = require('../package.json')
 var distance = require('../service/distance');
 var events = require('../service/events');
-var eventsNew = require('../service/eventsNew');
+var eventsQueue = require('../service/eventsQueue');
 
 var controllers = {
    about: function(req, res) {
@@ -21,8 +21,9 @@ var controllers = {
            res.json(dist);
        });
     },
-    grabEventsPostReq: function(req, res) {
-        eventsNew.grab(req.body);
+    pingEventsQueue: function(req, res) {
+        // handles a POST request
+        eventsQueue.ping(req.body, res);
     },
 };
 
