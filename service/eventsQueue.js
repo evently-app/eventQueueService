@@ -12,6 +12,30 @@ const geofirestore = new GeoFirestore.GeoFirestore(db)
 
 
 var eventsQueue = {
+
+	/*Parameters:
+	  data: Receive this as in a post request from the client.
+	  data:  {
+			    "coordinates": {
+			        "latitude": "41.310726",
+			        "longitude": "-72.929916"
+			    },
+			    "userPreferences": {
+			        "lit": 0.3,
+			        "Active": 0.5,
+			        "relaxing": 0.8,
+			        "outdoor": 0.6,
+			        "cultural": 0.9
+			    },
+			    "radius": "20",
+			    "eventType": "eventbrite/ticketmaster/...",
+			    "userid": "xxxxxxx"
+			}
+	   This function first queries from eventPool using geofirestore to pull events
+	   that are in a specific radium from user's location. Then it adds scores to each 
+	   events based on user preference and event distance from user. At last, it uploads
+	   those scored event to eventQueue subcollection in firestore.
+	*/
 	ping: async function(data,res){
 		var geoEventData = []
 		var eventData = []
@@ -54,9 +78,8 @@ var eventsQueue = {
 
 		await batch.commit()
 			.then(function(){console.log("Done")})
-
+		
 		res.send(eventData.slice(0,19))
-		// sortAndSend(eventData.slice(0,19), res, data)
 	},
 }
 
