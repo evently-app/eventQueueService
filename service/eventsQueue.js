@@ -40,6 +40,15 @@ var eventsQueue = {
 		var geoEventData = []
 		var eventData = []
 
+		// temp mock preference
+		data.userPreferences = {
+							       "lit":0.3,
+							       "Active":0.5,
+							       "relaxing":0.8,
+							       "outdoor":0.6,
+							       "cultural":0.9
+							    }
+
 		const queue = db.collection('users').doc(data.userid).collection("eventQueue")
 		const eventsFromQueue = await queue.get()
 
