@@ -1,39 +1,55 @@
-
 var utils = require('../utils.js');
 
 var sort =  {
 
-	//Given a list of Event objects, sort them by assigned/calculated score.
-	// Param: events: all the events returned from API
-	// userData: information about current user, like coordinate, and preference
+	 //Given a list of Event objects, sort them by assigned/calculated score.
+	// Arguments:
+	// userData : js object that have current user's location
+	// 			  and preference which is another js object
+	//			  {}
+	// events   : formatted events 
+	// Return:
+	// Sorted Events
 	sort: function(events,userData){
 
 		scoredEvents = this.addScore(events,userData);
+		// sort events based on score in descending order
+		// so events with larger score will appear first.
 		scoredEvents.sort(
 			function(event1,event2){
-				return event1['score']-event2['score'];
+				return event2['score']-event1['score'];
 			}
 		);
 		return scoredEvents;
 	
 	},
 
+
+
 	// Add a score property/field to each event object.
+	// Right now it is determined by event's distance from user and category
 	addScore: function(events,userData){
 
 		for (var i = 0; i < events.length; i++) {
 			events[i]['score'] = 0
 		}
-		// right now score is determined by remaining time and distance
-		scoredEvents = this.addTimeScore(events);
+		// scoredEvents = this.addTimeScore(events);
 		if (!userData){
 			return scoredEvents
 		}
-		
-		scoredEvents = this.addDistanceScore(scoredEvents,
-						userData.latitude,
-						userData.longitude);
-		
+		var scoredEvents = events
+
+		if(userData.hasOwnProperty('coordinates')){
+			scoredEvents = this.addDistanceScore(events,
+							userData.coordinates.latitude,
+							userData.coordinates.longitude)
+		}
+
+		if (userData.hasOwnProperty('userPreferences')){
+			scoredEvents = this.addPreferenceScore(scoredEvents,
+							userData.userPreferences);
+		}
+
 		// get users' coordinates from firestore
 		/*
 		*
@@ -44,6 +60,43 @@ var sort =  {
 		return scoredEvents;
 
 	},
+
+
+
+	// Use cosine similarity to compute the preference score for each event
+	addPreferenceScore: function(events, userPreferences){
+		userScore = []
+		for (var key in userPreferences) {
+		    if (userPreferences.hasOwnProperty(key)) {
+		    	userScore.push(userPreferences[key])
+		    }
+		}
+		for (var i = 0; i < events.length; i++) {
+			var event = events[i]
+			// Uncomment the following line when events do have this field
+			// var eventPreferenceTags = event.preferenceTags
+			var eventPreferenceTags = { 
+				cultural: 0.6,
+				active: 0.5,
+				lit: 0.4,
+				relaxing: 0.7,
+				outdoor: 0.9 
+			}
+
+			eventScore = []
+			for (var key in eventPreferenceTags) {
+			    if (eventPreferenceTags.hasOwnProperty(key)) {
+			    	eventScore.push(eventPreferenceTags[key])
+			    }
+			}
+			similarityScore = utils.similarity(userScore,eventScore)
+			event['preferenceScore'] = similarityScore;
+			event['score']+=2*similarityScore;
+		}
+
+		return events;
+	},
+
 
 	// Based on each event's remaining time (compared with current time), add a scaled score
 	// to each of them between 0 and 1. 
@@ -62,7 +115,7 @@ var sort =  {
 			var event = events[i];
 			// The math part
 			var timeScore = utils.scaleDown(
-				event['remainingTime'], minRemainingTime, maxRemainingTime, 0, 1);
+				event['remainingTime'], minRemainingTime, maxRemainingTime, 1, 0);
 			event['score'] += timeScore;
 		}
 		return events;
@@ -85,8 +138,9 @@ var sort =  {
 			var event = events[i];
 			// The math part
 			var distanceScore = utils.scaleDown(
-				event['distance'], minDistance, maxDistance, 0, 1);
+				event['distance'], minDistance, maxDistance, 1, 0);
 			// console.log(timeScore);
+			event['distanceScore'] = distanceScore
 			event['score'] += distanceScore;
 		}
 		return events;

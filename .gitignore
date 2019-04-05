@@ -2,3 +2,5 @@ node_modules
 service/.DS_Store
 .DS_Store
 evently-key.json
+# Bo: Helper file created locally to set environment variables
+setEnvVariable.sh

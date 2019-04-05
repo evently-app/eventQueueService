@@ -9,4 +9,6 @@ module.exports = function(app) {
        .get(controller.grabEvents);
     app.route('/scrape/')
        .get(controller.scrape);
+    app.route('/ping_events_queue')
+	     .post(controller.pingEventsQueue);
 };

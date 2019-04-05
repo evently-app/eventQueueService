@@ -51,7 +51,7 @@ module.exports = {
 	},
 
 	deg2rad: function (deg) {
-	  return deg * (Math.PI/180)
+		return deg * (Math.PI/180)
 	},
 
 	// scale a number in range [min,max] to [a,b]. 
@@ -59,8 +59,27 @@ module.exports = {
 	// will give us a list of [0,0.5,0.667,1]
 	scaleDown: function (x,min,max,a,b){
 		return (b-a)*(x-min)/(max-min)+a;
-	}
+	},
 
+	// Calculate the dot product of two vectors, represented by lists
+	dotProduct: function(a,b) {
+	    var n = 0, lim = Math.min(a.length,b.length)
+	    for (var i = 0; i < lim; i++) 
+	    	n += a[i] * b[i]
+	    return n
+ 	},
+
+ 	// 
+	magnitude: function(a) {
+		var sumsqr = 0
+		for (var i = 0; i < a.length; i++) 
+			sumsqr += a[i]*a[i]
+		return Math.sqrt(sumsqr)
+	},
+
+	similarity: function (a, b){
+		return this.dotProduct(a,b)/(this.magnitude(a)*this.magnitude(b))
+	}
 
 
 };
