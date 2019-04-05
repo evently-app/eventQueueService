@@ -1,5 +1,6 @@
 var sourceConstructor = require('../classes/sourceconstructor');
 var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster'), require('../sources/meetup')]
+var scrapers = [require('../scrapers/eventbrite'),require('../scrapers/ticketmaster')];
 var utils = require('../utils.js');
 var sort = require('./sort.js');
 var express = require('express')
@@ -20,11 +21,6 @@ admin.initializeApp({
 });
 var db = admin.firestore();
 
-//Helper Functions.
-function cache(id, event){
-  var docRef = db.collection('eventCache').doc(id);
-  var eventCache = docRef.set(event);
-}
 
 //Wrapper function which sorts the array and then sends it.
 function sortAndSend(events, res, userData) {
@@ -97,7 +93,31 @@ var events = {
       
 
 
+    },
+  scrape: async function(req, res) {
+    //TODO: authentication with req.
+
+    var formattedEvents = []; 
+
+    // scrape with each source
+    var requests = []
+    for (var i = 0; i < scrapers.length; i++){
+      requests.push(scrapers[i].scrape());
     }
+    //formatted events is a 2d array, list of scraped data from each source.
+    var formattedEvents = await Promise.all(requests) 
+
+    for(var i = 0; i < formattedEvents.length; i++){
+      for (var j = 0; j < formattedEvents[i].length; j++) {
+        var eventId = formattedEvents[i][j].id
+        var eventRef = db.collection('testEvents').doc(eventId)
+        eventRef.set(formattedEvents[i][j]) //async set, no await
+      }
+    }
+
+    //TODO: send meaningful res.
+    res.send({});
+  }
 };
 
 module.exports = events;

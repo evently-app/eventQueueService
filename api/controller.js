@@ -25,6 +25,10 @@ var controllers = {
         // handles a POST request
         eventsQueue.ping(req.body, res);
     },
+    
+    scrape: function(req, res) {
+        events.scrape(req, res);
+    }
 };
 
 
