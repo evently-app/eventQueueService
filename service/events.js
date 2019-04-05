@@ -1,6 +1,6 @@
 var sourceConstructor = require('../classes/sourceconstructor');
 var sourceObjects = [require('../sources/eventbrite'), require('../sources/ticketmaster'), require('../sources/meetup')]
-var scrapers = [require('../scrapers/ticketmaster')];
+var scrapers = [require('../scrapers/eventbrite'),require('../scrapers/ticketmaster')];
 var utils = require('../utils.js');
 var sort = require('./sort.js');
 var express = require('express')
@@ -110,7 +110,7 @@ var events = {
     for(var i = 0; i < formattedEvents.length; i++){
       for (var j = 0; j < formattedEvents[i].length; j++) {
         var eventId = formattedEvents[i][j].id
-        var eventRef = db.collection('testEventsTicketmaster').doc(eventId)
+        var eventRef = db.collection('testEvents').doc(eventId)
         eventRef.set(formattedEvents[i][j]) //async set, no await
       }
     }

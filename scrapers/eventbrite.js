@@ -58,6 +58,9 @@ eventbrite.formatEvent = async function(res) {
         var event = {
             eventName: res["name"]["text"],
             startTime: moment(res["start"]["local"]).format(),
+            startTimestamp: moment(res["start"]["local"]).unix(),
+            postingTime : moment().format(),
+            postingTimestamp: moment().unix(),
             endTime: res["end"]["local"],
             description: res["description"]["text"],
             ticketUrl: res["url"],
@@ -182,7 +185,7 @@ eventbrite.scrape = async function() {
             }
         }
     }
-
+    console.log("Eventbrite scraped " + toReturn.length + " events");
 	return toReturn;
 }
 
