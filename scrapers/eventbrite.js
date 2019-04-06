@@ -158,7 +158,7 @@ eventbrite.scrape = async function() {
 		pageSize = firstResponse.pagination.page_size;
 		pageCount = firstResponse.pagination.page_count;
 	} catch(err) {
-		console.log("Didn't get first response from eventbrite.")
+		console.log("Didn't get first response from eventbrite. Error: " + err)
 		return [];
 	}
 	if (pageSize == null || pageSize === 0 || pageCount == null || pageCount == 0) {

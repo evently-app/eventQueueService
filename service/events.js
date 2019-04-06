@@ -11,6 +11,7 @@ app.use(cors())
 
 //Firebase Initialization
 const admin = require('firebase-admin');
+const GeoFirestore = require('geofirestore')
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: "evently-db",
@@ -21,6 +22,11 @@ admin.initializeApp({
 });
 var db = admin.firestore();
 
+// Create a GeoFirestore reference
+const geofirestore = new GeoFirestore.GeoFirestore(db);
+
+// Create a GeoCollection reference
+const geoEventLocations = geofirestore.collection('eventsLocations');
 
 //Wrapper function which sorts the array and then sends it.
 function sortAndSend(events, res, userData) {
@@ -112,6 +118,10 @@ var events = {
         var eventId = formattedEvents[i][j].id
         var eventRef = db.collection('testEvents').doc(eventId)
         eventRef.set(formattedEvents[i][j]) //async set, no await
+        geoEventLocations.doc(eventId)
+            .set({
+              coordinates: new admin.firestore.GeoPoint(parseFloat(formattedEvents[i][j].latitude), parseFloat(formattedEvents[i][j].longitude))
+            })
       }
     }
 
