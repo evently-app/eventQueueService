@@ -56,7 +56,7 @@ var eventsQueue = {
 			...user.data().preferences
 		}
 
-		const queue = db
+		const queueRef = db
 			.collection("users")
 			.doc(uid)
 			.collection("eventQueue")
@@ -76,6 +76,10 @@ var eventsQueue = {
 		// Get query (as Promise)
 		// var geoEventData = await query.get()
 		let eventsData = []
+		const queue = await queueRef.get()
+
+		let currentQueue = {}
+		queue.forEach(doc => (currentQueue[doc.id] = doc))
 
 		const eventsRef = db.collection("events")
 		query
@@ -96,7 +100,7 @@ var eventsQueue = {
 
 						let batch = db.batch()
 						scoredEvents.forEach(event => {
-							batch.set(queue.doc(event.id), event)
+							if (!currentQueue[event.id].exists) batch.set(queueRef.doc(event.id), event)
 						})
 
 						batch.commit().then(() => {
