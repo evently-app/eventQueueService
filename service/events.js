@@ -116,7 +116,7 @@ var events = {
     for(var i = 0; i < formattedEvents.length; i++){
       for (var j = 0; j < formattedEvents[i].length; j++) {
         var eventId = formattedEvents[i][j].id
-        var eventRef = db.collection('testEvents').doc(eventId)
+        var eventRef = db.collection('events').doc(eventId)
         eventRef.set(formattedEvents[i][j]) //async set, no await
         geoEventLocations.doc(eventId)
             .set({
