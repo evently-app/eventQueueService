@@ -12,7 +12,7 @@ var sort =  {
 	// Sorted Events
 	sort: function(events,userData){
 
-		scoredEvents = this.addScore(events,userData);
+		var scoredEvents = this.addScore(events,userData);
 		// sort events based on score in descending order
 		// so events with larger score will appear first.
 		scoredEvents.sort(
@@ -30,14 +30,16 @@ var sort =  {
 	// Right now it is determined by event's distance from user and category
 	addScore: function(events,userData){
 
+		// initialize score field/property for event object
 		for (var i = 0; i < events.length; i++) {
 			events[i]['score'] = 0
 		}
-		// scoredEvents = this.addTimeScore(events);
+
+		var scoredEvents = this.addDescQualityScore(events)
+
 		if (!userData){
 			return scoredEvents
 		}
-		var scoredEvents = events
 
 		if(userData.hasOwnProperty('coordinates')){
 			scoredEvents = this.addDistanceScore(events,
@@ -47,10 +49,10 @@ var sort =  {
 
 		if (userData.hasOwnProperty('userPreferences')){
 			scoredEvents = this.addPreferenceScore(scoredEvents,
-							userData.userPreferences);
+							userData.userPreferences)
 		}
 
-		// get users' coordinates from firestore
+
 		/*
 		*
 			More scores coming
@@ -62,10 +64,32 @@ var sort =  {
 	},
 
 
+	addDescQualityScore: function(events){
+
+		var maxLength = 0
+		var minLength = Number.MAX_VALUE
+		for (var i = 0; i < events.length; i++) {
+			var event = events[i]
+			var desc = event['description']
+			var num_words = desc.split(' ').length
+			event['descLength'] = num_words
+			maxLength = Math.max(maxLength,event['descLength'])
+			minLength = Math.min(minLength,event['descLength'])
+		}
+
+		for (var i = 0; i < events.length; i++) {
+			var event = events[i]
+			// The math part
+			var descScore = utils.scaleDown(
+				event['descLength'], minLength, maxLength, 0, 1)
+			event['descScore'] = descScore
+			event['score'] += descScore
+		}
+	},
 
 	// Use cosine similarity to compute the preference score for each event
 	addPreferenceScore: function(events, userPreferences){
-		userScore = []
+		var userScore = []
 		for (var key in userPreferences) {
 		    if (userPreferences.hasOwnProperty(key)) {
 		    	userScore.push(userPreferences[key])
@@ -83,13 +107,13 @@ var sort =  {
 				outdoor: 0.9 
 			}
 
-			eventScore = []
+			var eventScore = []
 			for (var key in eventPreferenceTags) {
 			    if (eventPreferenceTags.hasOwnProperty(key)) {
 			    	eventScore.push(eventPreferenceTags[key])
 			    }
 			}
-			similarityScore = utils.similarity(userScore,eventScore)
+			var similarityScore = utils.similarity(userScore,eventScore)
 			event['preferenceScore'] = similarityScore;
 			event['score']+=2*similarityScore;
 		}
@@ -101,11 +125,10 @@ var sort =  {
 	// Based on each event's remaining time (compared with current time), add a scaled score
 	// to each of them between 0 and 1. 
 	addTimeScore: function(events){
-		maxRemainingTime = 0;
-		minRemainingTime = Number.MAX_VALUE;
+		var maxRemainingTime = 0;
+		var minRemainingTime = Number.MAX_VALUE;
 		for (var i = 0; i < events.length; i++) {
 			var event = events[i];
-			event['score'] = 0
 			event['remainingTime'] = 
 				utils.timeBetween(new Date(),new Date(event['startTime']));
 			maxRemainingTime = Math.max(maxRemainingTime,event['remainingTime']);
@@ -124,11 +147,10 @@ var sort =  {
 	// Based on each event's coordinates and user's current coordinate to compute the distance 
 	// among them and add a scaled score to each of them between 0 and 1.
 	addDistanceScore: function(events,userLat,userLong){
-		maxDistance = 0;
-		minDistance = Number.MAX_VALUE;
+		var maxDistance = 0;
+		var minDistance = Number.MAX_VALUE;
 		for (var i = 0; i < events.length; i++) {
 			var event = events[i];
-			event['score'] = 0
 			event['distance'] = 
 				utils.distanceBetween(userLat,userLong,events[i]['latitude'],events[i]['longitude']);
 			maxDistance = Math.max(maxDistance,event['distance']);
