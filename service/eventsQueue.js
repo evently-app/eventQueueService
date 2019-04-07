@@ -28,17 +28,6 @@ var eventsQueue = {
 	   those scored event to eventQueue subcollection in firestore.
 	*/
 	ping: async function({ uid, coordinates, radius }, res) {
-		// var geoEventData = []
-		// var eventData = []
-
-		// temp mock preference
-		// data.userPreferences = {
-		// 	lit: 0.3,
-		// 	Active: 0.5,
-		// 	relaxing: 0.8,
-		// 	outdoor: 0.6,
-		// 	cultural: 0.9
-		// }
 
 		const defaultPreferences = {
 			lit: 1.0,
@@ -60,8 +49,6 @@ var eventsQueue = {
 			.collection("users")
 			.doc(uid)
 			.collection("eventQueue")
-
-		// const eventsFromQueue = await queue.get()
 
 		// Create a GeoCollection reference
 		const geoEventLocations = geofirestore.collection("eventsLocations")
@@ -100,7 +87,7 @@ var eventsQueue = {
 
 						let batch = db.batch()
 						scoredEvents.forEach(event => {
-							if (!currentQueue[event.id].exists) batch.set(queueRef.doc(event.id), event)
+							if (!(event.id in currentQueue)) batch.set(queueRef.doc(event.id), event)
 						})
 
 						batch.commit().then(() => {
