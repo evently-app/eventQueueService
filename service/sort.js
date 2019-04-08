@@ -76,12 +76,30 @@ var sort =  {
 			maxLength = Math.max(maxLength,event['descLength'])
 			minLength = Math.min(minLength,event['descLength'])
 		}
+		// Based on our UI, there should be a most appropriate length of description
+		// Here we assume a description with 10 ~ 20 words makes most sense. 
+		// Subject to change.
+		var meaningfulRange = [10,20]
 
 		for (var i = 0; i < events.length; i++) {
 			var event = events[i]
-			// The math part
-			var descScore = utils.scaleDown(
-				event['descLength'], minLength, maxLength, 0, 1)
+			// Mimic a logistic growth
+			// There is bigger score difference for length 10 ~ 20
+			// Out of that range, score difference becomes much smaller. 
+			if (event['descLength'] < meaningfulRange[0]) {
+				var descScore = utils.scaleDown(
+					event['descLength'], minLength, meaningfulRange[0], 0, 0.2)
+			}
+			else if(event['descLength'] < meaningfulRange[1]){
+				var descScore = utils.scaleDown(
+					event['descLength'], meaningfulRange[0], 
+					meaningfulRange[1], 0.2, 0.8)
+			}
+			else{
+				var descScore = utils.scaleDown(
+					event['descLength'], meaningfulRange[1], 
+					maxLength, 0.8, 1)
+			}
 			event['descScore'] = descScore
 			event['score'] += descScore
 		}
