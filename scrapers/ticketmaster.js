@@ -44,7 +44,8 @@ ticketmaster.formatEvent = async function(res) {
 			latitude: res['_embedded']['venues'][0]['location']['latitude'],
 			longitude: res['_embedded']['venues'][0]['location']['longitude'],
 			source:'Ticketmaster', //has to be same as super's apiName
-			id: 'Ticketmaster' + res["id"] //has to be same as this.source + this.sourceId
+            id: 'Ticketmaster' + res["id"], //has to be same as this.source + this.sourceId
+            venue: res['_embedded']['venues'][0]['name'] //might limit events.
         }
         //time check.
         if(!event.startTime || event.startTime === 'Invalid date') {
@@ -72,8 +73,8 @@ ticketmaster.scrapeUrl = async function() {
 	var url = "https://app.ticketmaster.com/discovery/v2/events.json?";
 
     // Set to New Haven, Yale area. Can change.
-    url += 'geoPoint=' + Geohash.encode(41.3, 72.9, 7) + '&';
-    url += 'radius=' + '1000' + '&';
+    url += 'geoPoint=' + Geohash.encode(-72.9, 41.3,  7) + '&';
+    url += 'radius=' + '35' + '&';
 
 	url += "apikey=" + process.env.TICKETMASTER_API_KEY; //auth
 

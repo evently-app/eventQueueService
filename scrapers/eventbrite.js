@@ -70,7 +70,8 @@ eventbrite.formatEvent = async function(res) {
             latitude: res["venue"]["address"]["latitude"],
             longitude: res["venue"]["address"]["longitude"],
             source:'Eventbrite', //has to be same as super's apiName
-            id: 'Eventbrite' + res["id"] //has to be same as this.source + this.sourceId
+            id: 'Eventbrite' + res["id"], //has to be same as this.source + this.sourceId
+            venue: res["venue"]["name"]
         }
         //time check.
         if(!event.startTime || event.startTime === 'Invalid date') {
