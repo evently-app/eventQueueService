@@ -71,7 +71,11 @@ var sort =  {
 		for (var i = 0; i < events.length; i++) {
 			var event = events[i]
 			var desc = event['description']
-			var num_words = desc.split(' ').length
+			//check if the event has description.
+			if(desc)
+				var num_words = desc.split(' ').length
+			else
+				var num_words = 0
 			event['descLength'] = num_words
 			maxLength = Math.max(maxLength,event['descLength'])
 			minLength = Math.min(minLength,event['descLength'])
