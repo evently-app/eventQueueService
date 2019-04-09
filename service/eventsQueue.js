@@ -89,12 +89,7 @@ var eventsQueue = {
 						var pastPointer = 0
 						var batches = []
 						while (1){
-							if (scoredEvents.length < endChunkIdx) {
-								endPt = scoredEvents.length
-							}
-							else{
-								endPt = endChunkIdx
-							}
+							endPt = (scoredEvents.length < endChunkIdx) ? scoredEvents.length : endChunkIdx
 
 							let batch = db.batch()
 							for (var i = pastPointer; i < endPt; i++){
