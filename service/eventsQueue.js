@@ -85,15 +85,37 @@ var eventsQueue = {
 
 						const scoredEvents = sort.addScore(eventsData, { userPreferences, coordinates })
 
-						let batch = db.batch()
-						scoredEvents.forEach(event => {
-							if (!(event.id in currentQueue)) batch.set(queueRef.doc(event.id), event)
-						})
+						var endChunkIdx = 400 // batching in chunks of 400
+						var pastPointer = 0
+						var batches = []
+						while (1){
+							if (scoredEvents.length < endChunkIdx) {
+								endPt = scoredEvents.length
+							}
+							else{
+								endPt = endChunkIdx
+							}
 
-						batch.commit().then(() => {
-							console.log("done for user:", uid)
+							let batch = db.batch()
+							for (var i = pastPointer; i < endPt; i++){
+								if (!(scoredEvents[i].id in currentQueue)) batch.set(queueRef.doc(scoredEvents[i].id), scoredEvents[i])
+							}
+
+							batches.push(batch.commit())
+
+							if (endPt == scoredEvents.length){
+								break
+							}
+							pastPointer = endPt
+							endChunkIdx = endPt + 400
+						}
+
+						Promise.all(batches)
+							.then(() => {
+							console.log("Event queue data stored for user:", uid)
 							res.sendStatus(200)
 						})
+
 					})
 					.catch(error => console.log("Error getting documents:", error))
 			})
