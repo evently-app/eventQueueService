@@ -105,7 +105,7 @@ var sort =  {
 					maxLength, 0.8, 1)
 			}
 			event['descScore'] = descScore
-			event['score'] += descScore
+			event['score'] += 2*descScore
 		}
 	},
 
