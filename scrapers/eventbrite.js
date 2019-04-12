@@ -70,7 +70,8 @@ eventbrite.formatEvent = async function(res) {
             latitude: res["venue"]["address"]["latitude"],
             longitude: res["venue"]["address"]["longitude"],
             source:'Eventbrite', //has to be same as super's apiName
-            id: 'Eventbrite' + res["id"] //has to be same as this.source + this.sourceId
+            id: 'Eventbrite' + res["id"], //has to be same as this.source + this.sourceId
+            venue: res["venue"]["name"]
         }
         //time check.
         if(!event.startTime || event.startTime === 'Invalid date') {
@@ -101,8 +102,8 @@ eventbrite.scrapeUrl = async function() {
 	var url = "https://www.eventbriteapi.com/v3/events/search/?";
 
 	// Set to New Haven, Yale area. Can change.
-	url += "location.latitude=41.3&"; 
-	url += "location.longitude=-72.9&"; 
+	url += "location.latitude=41.3163&"; 
+	url += "location.longitude=-72.9223&"; 
 
 	url += "expand=venue,logo&";
 	url += "token=" + process.env.EVENTBRITE_API_KEY;
@@ -165,6 +166,7 @@ eventbrite.scrape = async function() {
 		return [];
 	}
 
+    console.log("Eventbrite has " + pageCount + " pages")
 	//Get events from all urls.
     var pageRequests = []
     for (var page = 1; page <= pageCount; page++) { //one indexed!
