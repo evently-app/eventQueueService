@@ -73,7 +73,7 @@ ticketmaster.scrapeUrl = async function() {
 	var url = "https://app.ticketmaster.com/discovery/v2/events.json?";
 
     // Set to New Haven, Yale area. Can change.
-    url += 'geoPoint=' + Geohash.encode(-72.9, 41.3,  7) + '&';
+    url += 'geoPoint=' + Geohash.encode(-72.9223, 41.3163,  7) + '&';
     url += 'radius=' + '35' + '&';
 
 	url += "apikey=" + process.env.TICKETMASTER_API_KEY; //auth
@@ -140,6 +140,7 @@ ticketmaster.scrape = async function() {
 		return [];
 	}
 
+    console.log("Ticketmaster has " + pageCount + " pages")
 	//Get events from all urls.
     var pageRequests = []
     for (var page = 1; page < pageCount; page++) { //one indexed!
