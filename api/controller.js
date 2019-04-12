@@ -14,13 +14,6 @@ var controllers = {
        res.json(aboutInfo);
    },
    
-    grabEvents: function(req, res) {
-       events.grab(req, res, function(err, dist) {
-           if (err)
-               res.send(err);
-           res.json(dist);
-       });
-    },
     pingEventsQueue: function(req, res) {
         // handles a POST request
         eventsQueue.ping(req.body, res);
