@@ -1,4 +1,4 @@
-var scrapers = [require('../scrapers/eventbrite'), require('../scrapers/meetup'), require('../scrapers/ticketmaster')];
+var scrapers = [require('../scrapers/eventbrite'), require('../scrapers/meetup'), require('../scrapers/yale'), require('../scrapers/ticketmaster')];
 var express = require('express')
 var cors = require('cors')
 var app = express()
