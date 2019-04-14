@@ -1,4 +1,3 @@
-var utils = require("../utils.js")
 var sort = require("./sort.js")
 
 //Firebase Initialization

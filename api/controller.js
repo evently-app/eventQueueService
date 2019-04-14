@@ -1,7 +1,6 @@
 'use strict';
 
 var properties = require('../package.json')
-var distance = require('../service/distance');
 var events = require('../service/events');
 var eventsQueue = require('../service/eventsQueue');
 
