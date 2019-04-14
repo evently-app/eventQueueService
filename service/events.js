@@ -36,7 +36,7 @@ var events = {
       requests.push(scrapers[i].scrape());
     }
     //formatted events is a 2d array, list of scraped data from each source.
-    var formattedEvents = await Promise.all(requests) 
+    formattedEvents = await Promise.all(requests) 
 
     for(var i = 0; i < formattedEvents.length; i++){
       for (var j = 0; j < formattedEvents[i].length; j++) {

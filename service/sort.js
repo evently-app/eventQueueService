@@ -72,10 +72,9 @@ var sort =  {
 			var event = events[i]
 			var desc = event['description']
 			//check if the event has description.
+			var num_words = 0
 			if(desc)
-				var num_words = desc.split(' ').length
-			else
-				var num_words = 0
+				num_words = desc.split(' ').length
 			event['descLength'] = num_words
 			maxLength = Math.max(maxLength,event['descLength'])
 			minLength = Math.min(minLength,event['descLength'])
@@ -86,33 +85,37 @@ var sort =  {
 		var meaningfulRange = [10,20]
 
 		for (var i = 0; i < events.length; i++) {
-			var event = events[i]
+			event = events[i]
 			// Mimic a logistic growth
 			// There is bigger score difference for length 10 ~ 20
 			// Out of that range, score difference becomes much smaller. 
+			var descScore = 0
 			if (event['descLength'] < meaningfulRange[0]) {
-				var descScore = utils.scaleDown(
+				descScore = utils.scaleDown(
 					event['descLength'], minLength, meaningfulRange[0], 0, 0.2)
 			}
 			else if(event['descLength'] < meaningfulRange[1]){
-				var descScore = utils.scaleDown(
+				descScore = utils.scaleDown(
 					event['descLength'], meaningfulRange[0], 
 					meaningfulRange[1], 0.2, 0.8)
 			}
 			else{
-				var descScore = utils.scaleDown(
+				descScore = utils.scaleDown(
 					event['descLength'], meaningfulRange[1], 
 					maxLength, 0.8, 1)
 			}
 			event['descScore'] = descScore
 			event['score'] += 2*descScore
 		}
+
+		return events;
 	},
 
 	// Use cosine similarity to compute the preference score for each event
 	addPreferenceScore: function(events, userPreferences){
 		var userScore = []
-		for (var key in userPreferences) {
+		var key = null
+		for (key in userPreferences) {
 		    if (userPreferences.hasOwnProperty(key)) {
 		    	userScore.push(userPreferences[key])
 		    }
@@ -130,7 +133,7 @@ var sort =  {
 			}
 
 			var eventScore = []
-			for (var key in eventPreferenceTags) {
+			for (key in eventPreferenceTags) {
 			    if (eventPreferenceTags.hasOwnProperty(key)) {
 			    	eventScore.push(eventPreferenceTags[key])
 			    }
@@ -149,15 +152,16 @@ var sort =  {
 	addTimeScore: function(events){
 		var maxRemainingTime = 0;
 		var minRemainingTime = Number.MAX_VALUE;
+		var event = null
 		for (var i = 0; i < events.length; i++) {
-			var event = events[i];
+			event = events[i];
 			event['remainingTime'] = 
 				utils.timeBetween(new Date(),new Date(event['startTime']));
 			maxRemainingTime = Math.max(maxRemainingTime,event['remainingTime']);
 			minRemainingTime = Math.min(minRemainingTime,event['remainingTime']);
 		}
 		for (var i = 0; i < events.length; i++) {
-			var event = events[i];
+			event = events[i];
 			// The math part
 			var timeScore = utils.scaleDown(
 				event['remainingTime'], minRemainingTime, maxRemainingTime, 1, 0);
@@ -171,15 +175,16 @@ var sort =  {
 	addDistanceScore: function(events,userLat,userLong){
 		var maxDistance = 0;
 		var minDistance = Number.MAX_VALUE;
+		var event = null
 		for (var i = 0; i < events.length; i++) {
-			var event = events[i];
+			event = events[i];
 			event['distance'] = 
 				utils.distanceBetween(userLat,userLong,events[i]['latitude'],events[i]['longitude']);
 			maxDistance = Math.max(maxDistance,event['distance']);
 			minDistance = Math.min(minDistance,event['distance']);
 		}
 		for (var i = 0; i < events.length; i++) {
-			var event = events[i];
+			event = events[i];
 			// The math part
 			var distanceScore = utils.scaleDown(
 				event['distance'], minDistance, maxDistance, 1, 0);
