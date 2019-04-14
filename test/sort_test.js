@@ -1,8 +1,5 @@
-var chai = require("chai");
 var sort = require("../service/sort.js");
 var assert = require("assert");
-
-var expect = chai.expect;
 
 describe("addScoreToEvent", function() {
 	const mockUserLocation = {

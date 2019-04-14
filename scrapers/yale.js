@@ -64,8 +64,6 @@ yale.formatEvent = async function(res) {
         }
         if (!hasImg)
             return null;
-        console.log(event.id);
-        console.log(res["name"])
     }
     catch(err){
         console.log("An event from yale does not have all required fields.\n"+err.message);

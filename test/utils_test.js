@@ -1,8 +1,5 @@
-var chai = require("chai");
 var utils = require("../utils.js");
 var assert = require("assert");
-
-var expect = chai.expect;
 
 describe("tests utils function", function() {
 	it("flatten", function() {
