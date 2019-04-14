@@ -10,6 +10,8 @@ var sort =  {
 	// events   : formatted events 
 	// Return:
 	// Sorted Events
+
+	// Deprecated now. Sorting is done on the front end.
 	sort: function(events,userData){
 
 		var scoredEvents = this.addScore(events,userData);
