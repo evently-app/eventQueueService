@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "scripts/test"
   },
   "author": "David Liu",
   "license": "ISC",
@@ -13,11 +13,13 @@
     "@parellin/geohash": "^1.0.7",
     "async": "^2.6.2",
     "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "firebase-admin": "^7.0.0",
     "geofirestore": "^3.2.3",
     "grpc": "^1.19.0",
+    "mocha": "^6.1.3",
     "moment": "^2.24.0",
     "object-merge": "^2.5.1",
     "request": "^2.88.0",
