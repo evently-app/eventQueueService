@@ -27,7 +27,7 @@ var sort =  {
 
 
 	// Add a score property/field to each event object.
-	// Right now it is determined by event's distance from user, description length, and category
+	// Right now it is determined by event's distance from user, description length, and user preferences
 	addScore: function(events,userData){
 
 		// initialize score field/property for event object
