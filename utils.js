@@ -13,16 +13,6 @@ module.exports = {
 		return flattened;
 	},
 
-	//Enforce parameters passed have all required information.
-	// Not in use.
-	checkParameter: function (refs, param){
-		for (var i = 0; i < refs.length; i++) {
-			if (param.hasOwnProperty(refs[i])) {
-				return false;
-			}
-		}
-	},
-
 	// Calculate the time difference between two Date() object in milliseconds.
 	timeBetween: function ( date1, date2 ) {
 	  // Convert both dates to milliseconds
