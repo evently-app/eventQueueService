@@ -18,7 +18,6 @@ var eventsQueue = {
 			        "longitude": "-72.929916"
 			    },
 			    "radius": "20",
-			    "eventType": "eventbrite/ticketmaster/...",
 			    "userid": "xxxxxxx"
 			}
 	   This function first queries from eventPool using geofirestore to pull events
