@@ -6,27 +6,14 @@ var app = express()
 app.use(cors())
 
 //Firebase Initialization
-const admin = require('firebase-admin');
-const GeoFirestore = require('geofirestore')
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: "evently-db",
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_KEY.replace(/\\n/g, '\n')
-  }),
-  databaseURL: 'https://evently-db.firebaseio.com'
-});
-var db = admin.firestore();
-
-// Create a GeoFirestore reference
-const geofirestore = new GeoFirestore.GeoFirestore(db);
-
-// Create a GeoCollection reference
-const geoEventLocations = geofirestore.collection('eventsLocations');
+var firebaseController = require('./firebaseController')
 
 var events = {
   scrape: async function(req, res) {
     //TODO: authentication with req.
+
+    // clean up old data.
+    await firebaseController.cleanUpEvents()
 
     var formattedEvents = []; 
 
@@ -40,13 +27,7 @@ var events = {
 
     for(var i = 0; i < formattedEvents.length; i++){
       for (var j = 0; j < formattedEvents[i].length; j++) {
-        var eventId = formattedEvents[i][j].id
-        var eventRef = db.collection('events').doc(eventId)
-        eventRef.set(formattedEvents[i][j]) //async set, no await
-        geoEventLocations.doc(eventId)
-            .set({
-              coordinates: new admin.firestore.GeoPoint(parseFloat(formattedEvents[i][j].latitude), parseFloat(formattedEvents[i][j].longitude))
-            })
+        firebaseController.addEvent(formattedEvents[i][j])
       }
     }
 
