@@ -107,7 +107,7 @@ var sort =  {
 					maxLength, 0.8, 1)
 			}
 			event['descScore'] = descScore
-			event['score'] += 2*descScore
+			event['score'] += descScore
 		}
 
 		return events;
@@ -125,19 +125,11 @@ var sort =  {
 		for (var i = 0; i < events.length; i++) {
 			var event = events[i]
 			// Uncomment the following line when events do have this field
-			// var eventPreferenceTags = event.preferenceTags
-			var eventPreferenceTags = { 
-				cultural: 0.6,
-				active: 0.5,
-				lit: 0.4,
-				relaxing: 0.7,
-				outdoor: 0.9 
-			}
-
+			var eventPreference = event.preferences
 			var eventScore = []
-			for (key in eventPreferenceTags) {
-			    if (eventPreferenceTags.hasOwnProperty(key)) {
-			    	eventScore.push(eventPreferenceTags[key])
+			for (key in eventPreference) {
+			    if (eventPreference.hasOwnProperty(key)) {
+			    	eventScore.push(eventPreference[key])
 			    }
 			}
 			var similarityScore = utils.similarity(userScore,eventScore)
