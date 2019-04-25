@@ -36,6 +36,7 @@ meetup.formatEvent = async function(res) {
             postingTime : moment().format(),
             postingTimestamp: moment().unix(),
             endTime: null,
+            endTimestamp: null, 
             description: res["description"] || null,
             ticketUrl: res["link"],
             sourceId: res["id"],
