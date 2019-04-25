@@ -1,15 +1,24 @@
 # eventQueueService
+Deployed Page: http://event-queue-service.herokuapp.com/
 
-To run locally:
-1. Run `npm install`.
-2. Set env variables for sources (e.g EVENTBRITE_API_KEY for eventbrite)
-3. Ensure that you have the firebase service account key file in the eventQueueService directory.
-4. Run `npm start`
-5. Go to http://localhost:3000/grab_events/41.310726/-72.929916/5km (params are latitude, longitude, radius respectively)
+1. Clone Repositary.
+2. Add environment Variables. Required Env Variables are: 
+FIREBASE_KEY
+FIREBASE_CLIENT_EMAIL
+EVENTBRITE_API_KEY
+TICKETMASTER_API_KEY
+MEETUP_REFRESH_TOKEN
+MEETUP_CLIENT_ID
+MEETUP_SECRET
+3. Read api/routes for possible routes to call.
 
+## Scraping
+Collects data from various APIs, stores in "events" collection (name can be modified in service/events.js).
+All scrapers (one per API) are stored in scrapers directory, extendable, add .scrape method to exported api which
+returns a promise that resolves to a list of events, formatted according to Database Schema. 
 
-To run mocha/chai tests (once they're ready):
-1. run `./node_modules/mocha/bin/mocha`
+Scraping can be called using scrape route on local host or deployed page.
+Automatic cron jobs set on: https://cron-job.org/en/
 
 To see current version running on heroku: 
 https://event-queue-service.herokuapp.com/grab_events/40/-74/1000km
@@ -17,3 +26,11 @@ https://event-queue-service.herokuapp.com/grab_events/40/-74/1000km
 
 ## service/sort.js
 This is the file that determine the ordering of each user's event card. Function addScore is the main function that takes in a collection of events and user data, returning all events with scores. Right now the score is based on **user's distance to event's location, user's preference, and event's quality(length of description)**. addPreferenceScore, addDistanceScore, and addDescQualityScore are the functions that calculate corresponding scores.
+
+To run locally:
+1. Run `yarn install`.
+2. Run `yarn start`
+3. Call any routes in localhost:3000. (Can go to deployed page.)
+
+To run mocha/chai tests:
+    run mocha test.
