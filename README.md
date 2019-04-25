@@ -23,7 +23,7 @@ Automatic cron jobs set on: https://cron-job.org/en/
 To see current version running on heroku: 
 https://event-queue-service.herokuapp.com/grab_events/40/-74/1000km
 
-##service/eventQueue.js
+## service/eventQueue.js
 This is the file that handles populating user's queue of events.
 Function ping accepts request from front end and queries from eventPool using geofirestore to pull events that are in a specific radium from user's location. Then it adds scores to each events based on user preference and event distance from user. At last, it uploads those scored event to eventQueue subcollection in firestore. 
 
